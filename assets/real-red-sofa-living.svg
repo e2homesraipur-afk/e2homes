@@ -1,0 +1,188 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="100%" height="100%">
+  <defs>
+    <!-- Wall & Floor Gradients -->
+    <linearGradient id="wallGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FAFAFA"/>
+      <stop offset="100%" stop-color="#F0F0F0"/>
+    </linearGradient>
+    <linearGradient id="floorGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#EAE6E1"/>
+      <stop offset="100%" stop-color="#DCD6CE"/>
+    </linearGradient>
+    
+    <!-- Red Velvet Fabric Gradient -->
+    <linearGradient id="redVelvet" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D3122A"/>
+      <stop offset="50%" stop-color="#B20A1E"/>
+      <stop offset="100%" stop-color="#830312"/>
+    </linearGradient>
+    <linearGradient id="redCushion" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#E51F37"/>
+      <stop offset="100%" stop-color="#A0081B"/>
+    </linearGradient>
+
+    <!-- Wood Texture Gradient -->
+    <linearGradient id="darkWood" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#4A2511"/>
+      <stop offset="50%" stop-color="#361A0B"/>
+      <stop offset="100%" stop-color="#241005"/>
+    </linearGradient>
+    <linearGradient id="warmWoodLeg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7B4323"/>
+      <stop offset="100%" stop-color="#411F0D"/>
+    </linearGradient>
+
+    <!-- Table & Glass Top -->
+    <linearGradient id="blackTable" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#222222"/>
+      <stop offset="100%" stop-color="#111111"/>
+    </linearGradient>
+    
+    <!-- Soft Shadows -->
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.18"/>
+    </filter>
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+    </filter>
+  </defs>
+
+  <!-- Background Wall -->
+  <rect x="0" y="0" width="1200" height="520" fill="url(#wallGrad)"/>
+  <line x1="0" y1="520" x2="1200" y2="520" stroke="#DDD" stroke-width="2"/>
+
+  <!-- Tiled Floor -->
+  <rect x="0" y="520" width="1200" height="280" fill="url(#floorGrad)"/>
+  <!-- Tile Grid Lines -->
+  <path d="M 0 600 L 1200 600 M 0 690 L 1200 690 M 0 770 L 1200 770" stroke="#CCC" stroke-width="1.2" opacity="0.6"/>
+  <path d="M 250 520 L 150 800 M 550 520 L 500 800 M 850 520 L 850 800 M 1100 520 L 1150 800" stroke="#CCC" stroke-width="1.2" opacity="0.6"/>
+
+  <!-- Left Dark Wooden Entrance Door -->
+  <g filter="url(#shadow)">
+    <rect x="10" y="40" width="220" height="480" fill="url(#darkWood)" rx="4"/>
+    <rect x="25" y="55" width="190" height="450" fill="none" stroke="#2B1408" stroke-width="4"/>
+    <line x1="25" y1="160" x2="215" y2="160" stroke="#2B1408" stroke-width="3"/>
+    <line x1="25" y1="280" x2="215" y2="280" stroke="#2B1408" stroke-width="3"/>
+    <line x1="25" y1="400" x2="215" y2="400" stroke="#2B1408" stroke-width="3"/>
+    <!-- Door Handle -->
+    <rect x="200" y="250" width="12" height="35" rx="3" fill="#D4AF37"/>
+    <circle cx="206" cy="258" r="4" fill="#B38F24"/>
+  </g>
+
+  <!-- Blue Striped Doormat in Front of Door -->
+  <g>
+    <polygon points="60,530 180,530 200,560 40,560" fill="#1C3F60"/>
+    <line x1="70" y1="538" x2="190" y2="538" stroke="#388E3C" stroke-width="3"/>
+    <line x1="65" y1="546" x2="193" y2="546" stroke="#FFFFFF" stroke-width="2"/>
+    <line x1="55" y1="553" x2="197" y2="553" stroke="#388E3C" stroke-width="3"/>
+  </g>
+
+  <!-- Electrical Switchboard on Wall -->
+  <rect x="260" y="270" width="45" height="30" rx="4" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="2"/>
+  <rect x="268" y="278" width="8" height="14" fill="#DDD"/>
+  <rect x="282" y="278" width="8" height="14" fill="#DDD"/>
+  <rect x="296" y="278" width="5" height="5" rx="1" fill="#999"/>
+
+  <!-- RED VELVET 3-SEATER MAIN SOFA (RIGHT) -->
+  <g filter="url(#shadow)">
+    <!-- Shadow underneath -->
+    <ellipse cx="900" cy="690" rx="270" ry="25" fill="#000" opacity="0.25"/>
+
+    <!-- Wooden Legs -->
+    <rect x="680" y="650" width="28" height="45" rx="4" fill="url(#warmWoodLeg)"/>
+    <rect x="1100" y="650" width="28" height="45" rx="4" fill="url(#warmWoodLeg)"/>
+    <rect x="880" y="650" width="24" height="45" rx="4" fill="url(#warmWoodLeg)"/>
+
+    <!-- Sofa Backrest -->
+    <rect x="650" y="380" width="520" height="200" rx="24" fill="url(#redVelvet)"/>
+    
+    <!-- Button Tufting Details on Backrest -->
+    <g fill="#FFFFFF" opacity="0.9">
+      <circle cx="720" cy="430" r="4"/><circle cx="820" cy="430" r="4"/><circle cx="920" cy="430" r="4"/><circle cx="1020" cy="430" r="4"/><circle cx="1100" cy="430" r="4"/>
+      <circle cx="720" cy="490" r="4"/><circle cx="820" cy="490" r="4"/><circle cx="920" cy="490" r="4"/><circle cx="1020" cy="490" r="4"/><circle cx="1100" cy="490" r="4"/>
+    </g>
+
+    <!-- Main Cushion Seat -->
+    <rect x="640" y="510" width="540" height="150" rx="18" fill="url(#redCushion)"/>
+    <line x1="820" y1="510" x2="820" y2="660" stroke="#7A0210" stroke-width="3"/>
+    <line x1="1000" y1="510" x2="1000" y2="660" stroke="#7A0210" stroke-width="3"/>
+
+    <!-- Left Wooden Armrest -->
+    <path d="M 620 480 Q 620 440 650 440 L 660 440 L 660 630 L 620 630 Z" fill="url(#warmWoodLeg)"/>
+    <rect x="625" y="460" width="35" height="150" rx="10" fill="url(#redVelvet)"/>
+
+    <!-- Right Wooden Armrest -->
+    <path d="M 1160 480 Q 1160 440 1190 440 L 1200 440 L 1200 630 L 1160 630 Z" fill="url(#warmWoodLeg)"/>
+    <rect x="1160" y="460" width="35" height="150" rx="10" fill="url(#redVelvet)"/>
+  </g>
+
+  <!-- RED VELVET SINGLE ARMCHAIR 1 (MIDDLE-LEFT) -->
+  <g filter="url(#shadow)">
+    <!-- Shadow -->
+    <ellipse cx="360" cy="690" rx="90" ry="18" fill="#000" opacity="0.2"/>
+    <!-- Legs -->
+    <rect x="290" y="650" width="20" height="40" rx="3" fill="url(#warmWoodLeg)"/>
+    <rect x="420" y="650" width="20" height="40" rx="3" fill="url(#warmWoodLeg)"/>
+    <!-- Backrest -->
+    <rect x="280" y="410" width="160" height="160" rx="18" fill="url(#redVelvet)"/>
+    <circle cx="330" cy="460" r="3.5" fill="#FFF"/><circle cx="390" cy="460" r="3.5" fill="#FFF"/>
+    <circle cx="330" cy="510" r="3.5" fill="#FFF"/><circle cx="390" cy="510" r="3.5" fill="#FFF"/>
+    <!-- Cushion -->
+    <rect x="275" y="520" width="170" height="135" rx="14" fill="url(#redCushion)"/>
+    <!-- Wooden Armrests -->
+    <rect x="260" y="470" width="22" height="140" rx="8" fill="url(#warmWoodLeg)"/>
+    <rect x="443" y="470" width="22" height="140" rx="8" fill="url(#warmWoodLeg)"/>
+  </g>
+
+  <!-- RED VELVET SINGLE ARMCHAIR 2 (CENTER-RIGHT) -->
+  <g filter="url(#shadow)">
+    <ellipse cx="510" cy="670" rx="85" ry="16" fill="#000" opacity="0.2"/>
+    <rect x="450" y="630" width="18" height="38" rx="3" fill="url(#warmWoodLeg)"/>
+    <rect x="560" y="630" width="18" height="38" rx="3" fill="url(#warmWoodLeg)"/>
+    <rect x="440" y="400" width="150" height="150" rx="16" fill="url(#redVelvet)"/>
+    <circle cx="485" cy="450" r="3" fill="#FFF"/><circle cx="545" cy="450" r="3" fill="#FFF"/>
+    <circle cx="485" cy="495" r="3" fill="#FFF"/><circle cx="545" cy="495" r="3" fill="#FFF"/>
+    <rect x="435" y="505" width="160" height="125" rx="12" fill="url(#redCushion)"/>
+    <rect x="422" y="460" width="20" height="130" rx="8" fill="url(#warmWoodLeg)"/>
+    <rect x="590" y="460" width="20" height="130" rx="8" fill="url(#warmWoodLeg)"/>
+  </g>
+
+  <!-- MODERN TWO-TIER BLACK COFFEE TABLE -->
+  <g filter="url(#shadow)">
+    <!-- Table Shadow -->
+    <ellipse cx="680" cy="745" rx="170" ry="22" fill="#000" opacity="0.3"/>
+
+    <!-- Steel Support Legs -->
+    <rect x="530" y="650" width="14" height="85" fill="#888"/>
+    <rect x="810" y="650" width="14" height="85" fill="#888"/>
+    <circle cx="537" cy="735" r="10" fill="#Silver"/>
+    <circle cx="817" cy="735" r="10" fill="#Silver"/>
+
+    <!-- Bottom Shelf -->
+    <rect x="520" y="690" width="310" height="20" rx="4" fill="#111"/>
+
+    <!-- Top Surface -->
+    <rect x="500" y="630" width="350" height="30" rx="6" fill="url(#blackTable)"/>
+    <rect x="510" y="632" width="330" height="6" rx="2" fill="#444" opacity="0.6"/>
+
+    <!-- Green Plant in White Pot on Table -->
+    <ellipse cx="670" cy="628" rx="18" ry="6" fill="#FFF" stroke="#DDD"/>
+    <path d="M 656 628 L 660 600 L 680 600 L 684 628 Z" fill="#FFFFFF" stroke="#ECECEC"/>
+    <!-- Lush Green Leaves -->
+    <circle cx="670" cy="585" r="22" fill="#2E7D32"/>
+    <circle cx="658" cy="580" r="16" fill="#4CAF50"/>
+    <circle cx="682" cy="582" r="16" fill="#388E3C"/>
+    <circle cx="670" cy="572" r="14" fill="#81C784"/>
+
+    <!-- TV Remote Control -->
+    <rect x="730" y="635" width="40" height="12" rx="3" fill="#333" transform="rotate(-10 750 640)"/>
+    <circle cx="738" cy="639" r="2" fill="#FF5252"/>
+  </g>
+
+  <!-- Title Badge Overlay -->
+  <g>
+    <rect x="30" y="30" width="460" height="52" rx="26" fill="rgba(10, 31, 23, 0.85)" stroke="#C9A66B" stroke-width="1.5"/>
+    <text x="55" y="62" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-size="20" font-weight="800" fill="#C9A66B">E2 HOMES RAIPUR</text>
+    <text x="245" y="62" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-size="16" font-weight="600" fill="#FFFFFF">| Real Living Room Photo</text>
+  </g>
+</svg>

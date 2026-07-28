@@ -1,0 +1,6 @@
+{
+  "name": "E2 Homes Raipur",
+  "description": "Premium serviced homestay located at Empresia Elite, Near Kamal Vihar Sector 8A, Raipur, Chhattisgarh offering luxury accommodations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

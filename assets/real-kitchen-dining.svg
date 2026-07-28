@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="100%" height="100%">
+  <defs>
+    <linearGradient id="kitchWall" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#F2F2F2"/>
+    </linearGradient>
+    <linearGradient id="graniteCounter" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#222222"/>
+      <stop offset="50%" stop-color="#333333"/>
+      <stop offset="100%" stop-color="#111111"/>
+    </linearGradient>
+    <linearGradient id="cabinetWood" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0A1F17"/>
+      <stop offset="100%" stop-color="#133C2D"/>
+    </linearGradient>
+    <filter id="shadowK" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000000" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="800" fill="url(#kitchWall)"/>
+
+  <!-- Upper Cabinets -->
+  <rect x="100" y="40" width="1000" height="220" rx="8" fill="url(#cabinetWood)"/>
+  <line x1="350" y1="40" x2="350" y2="260" stroke="#000" stroke-width="2"/>
+  <line x1="600" y1="40" x2="600" y2="260" stroke="#000" stroke-width="2"/>
+  <line x1="850" y1="40" x2="850" y2="260" stroke="#000" stroke-width="2"/>
+
+  <!-- Backsplash Tiles -->
+  <rect x="100" y="260" width="1000" height="200" fill="#EAEAEA"/>
+  <path d="M 100 310 L 1100 310 M 100 360 L 1100 360 M 100 410 L 1100 410" stroke="#DDD" stroke-width="1.5"/>
+
+  <!-- Granite Countertop -->
+  <g filter="url(#shadowK)">
+    <rect x="80" y="460" width="1040" height="50" rx="4" fill="url(#graniteCounter)"/>
+    <!-- Lower Cabinets -->
+    <rect x="80" y="510" width="1040" height="250" fill="url(#cabinetWood)"/>
+    <line x1="340" y1="510" x2="340" y2="760" stroke="#000" stroke-width="2"/>
+    <line x1="600" y1="510" x2="600" y2="760" stroke="#000" stroke-width="2"/>
+    <line x1="860" y1="510" x2="860" y2="760" stroke="#000" stroke-width="2"/>
+  </g>
+
+  <!-- Appliances on Counter -->
+  <!-- Gas Stove & Burners -->
+  <rect x="200" y="420" width="220" height="40" rx="6" fill="#1A1A1A" stroke="#444"/>
+  <circle cx="250" cy="440" r="14" fill="#333" stroke="#888" stroke-width="3"/>
+  <circle cx="370" cy="440" r="14" fill="#333" stroke="#888" stroke-width="3"/>
+
+  <!-- Microwave -->
+  <rect x="520" y="320" width="200" height="130" rx="8" fill="#FFFFFF" stroke="#CCCCCC" stroke-width="2"/>
+  <rect x="535" y="335" width="120" height="100" rx="4" fill="#222"/>
+
+  <!-- Refrigerator (Right) -->
+  <rect x="900" y="200" width="220" height="560" rx="12" fill="#E5E5E5" stroke="#BBB" stroke-width="2"/>
+  <line x1="900" y1="420" x2="1120" y2="420" stroke="#BBB" stroke-width="2"/>
+  <rect x="920" y="340" width="12" height="60" rx="3" fill="#888"/>
+  <rect x="920" y="450" width="12" height="60" rx="3" fill="#888"/>
+
+  <!-- Title Badge Overlay -->
+  <g>
+    <rect x="30" y="30" width="500" height="52" rx="26" fill="rgba(10, 31, 23, 0.85)" stroke="#C9A66B" stroke-width="1.5"/>
+    <text x="55" y="62" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-size="20" font-weight="800" fill="#C9A66B">E2 HOMES RAIPUR</text>
+    <text x="245" y="62" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-size="16" font-weight="600" fill="#FFFFFF">| Fully Equipped Kitchen</text>
+  </g>
+</svg>
