@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initDatePickers();
   initImageManager();
   initLocalGuideFilter();
+  initGuestReviewsCarousel();
 });
 
 /* --------------------------------------------------------------------------
@@ -440,7 +441,9 @@ function showToast(message, type = 'info') {
    12. HOST AUTHENTICATION & INTERACTIVE SITE IMAGE MANAGER
    -------------------------------------------------------------------------- */
 function initImageManager() {
-  const HOST_PIN = '9301'; // Default Host PIN matching phone prefix
+  const getHostPin = () => {
+    return localStorage.getItem('E2_HOST_PIN') || '9301';
+  };
   const triggerBtns = document.querySelectorAll('.open-image-manager');
   const modal = document.getElementById('imageManagerModal');
   const closeBtn = document.querySelector('.image-manager-close');
@@ -450,6 +453,7 @@ function initImageManager() {
   const resetBtn = document.getElementById('resetImagesBtn');
   const exportBtn = document.getElementById('exportConfigBtn');
   const lockHostBtn = document.getElementById('lockHostBtn');
+  const changePinBtn = document.getElementById('changePinBtn');
 
   // PIN Modal Elements
   const pinModal = document.getElementById('hostPinModal');
@@ -507,7 +511,8 @@ function initImageManager() {
   // Verify PIN
   const verifyPin = () => {
     const enteredPin = pinInput ? pinInput.value.trim() : '';
-    if (enteredPin === HOST_PIN || enteredPin === '1234') { // Allow 9301 or 1234 as valid host PINs
+    const currentHostPin = getHostPin();
+    if (enteredPin && enteredPin === currentHostPin) {
       sessionStorage.setItem('E2_HOST_AUTH', 'true');
       updateHostControlsVisibility();
       closePinModal();
@@ -533,6 +538,8 @@ function initImageManager() {
       return;
     }
     renderImageList();
+    renderPropertySettings();
+    renderHostReviewsList();
     modal.classList.add('active');
     overlay?.classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -548,6 +555,22 @@ function initImageManager() {
   closeBtn?.addEventListener('click', closeImageModal);
   overlay?.addEventListener('click', closeImageModal);
 
+  // Tab Navigation in Host Control Panel
+  const tabBtns = modal.querySelectorAll('.host-mgr-tab');
+  const tabContents = modal.querySelectorAll('.host-mgr-tab-content');
+
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetTab = btn.getAttribute('data-tab');
+      tabBtns.forEach(b => b.classList.remove('active'));
+      tabContents.forEach(c => c.style.display = 'none');
+
+      btn.classList.add('active');
+      const targetEl = modal.querySelector(`#${targetTab}`);
+      if (targetEl) targetEl.style.display = 'block';
+    });
+  });
+
   // Logout Host
   lockHostBtn?.addEventListener('click', () => {
     sessionStorage.removeItem('E2_HOST_AUTH');
@@ -555,6 +578,20 @@ function initImageManager() {
     updateHostControlsVisibility();
     closeImageModal();
     showToast('Host session logged out', 'info');
+  });
+
+  // Change Host Passcode PIN
+  changePinBtn?.addEventListener('click', () => {
+    const newPin = prompt('Set a new Host Passcode PIN (minimum 4 characters):');
+    if (newPin !== null) {
+      const trimmed = newPin.trim();
+      if (trimmed.length >= 4) {
+        localStorage.setItem('E2_HOST_PIN', trimmed);
+        showToast('Host PIN updated successfully!', 'success');
+      } else {
+        alert('PIN must be at least 4 characters long.');
+      }
+    }
   });
 
   /* ------------------------------------------------------------------------
@@ -588,7 +625,7 @@ function initImageManager() {
     clickTimer = setTimeout(() => { clickCount = 0; }, 800);
   });
 
-  // Render Image Fields Grouped by Category
+  // Render Tab 1: Image & Photo Name Fields
   function renderImageList() {
     const images = typeof getActiveSiteImages === 'function' ? getActiveSiteImages() : {};
     container.innerHTML = '';
@@ -608,20 +645,31 @@ function initImageManager() {
       container.appendChild(catHeader);
 
       categories[catName].forEach(item => {
+        let displayUrl = item.url || '';
+        if (displayUrl.startsWith('/assets/')) {
+          displayUrl = '.' + displayUrl;
+        }
+
         const card = document.createElement('div');
         card.className = 'img-mgr-card';
         card.innerHTML = `
           <div class="img-mgr-thumb">
-            <img src="${item.url}" id="preview-${item.key}" alt="${item.label}" referrerpolicy="no-referrer" onerror="this.src='https://via.placeholder.com/150?text=Invalid+Image'">
+            <img src="${displayUrl}" id="preview-${item.key}" alt="${item.label}" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'150\\' height=\\'150\\' viewBox=\\'0 0 150 150\\'><rect width=\\'100%\\' height=\\'100%\\' fill=\\'%23f1f5f9\\'/><text x=\\'50%\\' y=\\'50%\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\' fill=\\'%2394a3b8\\' font-family=\\'sans-serif\\' font-size=\\'12\\'>No Preview</text></svg>';">
           </div>
           <div class="img-mgr-info">
-            <label class="img-mgr-label" for="input-${item.key}">${item.label}</label>
-            <div class="img-mgr-input-group">
-              <input type="text" id="input-${item.key}" class="img-mgr-input" data-key="${item.key}" value="${item.url}" placeholder="Paste Image URL or /assets/filename.jpg">
-              <label class="btn btn-outline-forest btn-sm img-mgr-file-btn">
-                <i class="fa-solid fa-upload"></i> Upload
-                <input type="file" accept="image/*" class="img-mgr-file-input" data-key="${item.key}" style="display:none;">
-              </label>
+            <div class="img-mgr-label-row">
+              <span class="img-mgr-field-title">Photo Name / Title:</span>
+              <input type="text" id="label-${item.key}" class="img-mgr-input img-mgr-label-input" data-key="${item.key}" value="${item.label}" placeholder="Photo or Room Name">
+            </div>
+            <div class="img-mgr-url-row">
+              <span class="img-mgr-field-title">Image URL or Upload:</span>
+              <div class="img-mgr-input-group">
+                <input type="text" id="input-${item.key}" class="img-mgr-input img-mgr-url-input" data-key="${item.key}" value="${displayUrl}" placeholder="Paste Image URL or ./assets/filename.jpg">
+                <label class="btn btn-outline-forest btn-sm img-mgr-file-btn">
+                  <i class="fa-solid fa-upload"></i> Upload
+                  <input type="file" accept="image/*" class="img-mgr-file-input" data-key="${item.key}" style="display:none;">
+                </label>
+              </div>
             </div>
           </div>
         `;
@@ -632,7 +680,11 @@ function initImageManager() {
         const urlInput = card.querySelector(`#input-${item.key}`);
         const previewImg = card.querySelector(`#preview-${item.key}`);
         urlInput?.addEventListener('input', (e) => {
-          previewImg.src = e.target.value;
+          let val = e.target.value.trim();
+          if (val.startsWith('/assets/')) {
+            val = '.' + val;
+          }
+          previewImg.src = val;
         });
 
         // Helper: Compress & Downscale Uploaded Images to fit in localStorage
@@ -663,7 +715,6 @@ function initImageManager() {
               const ctx = canvas.getContext('2d');
               ctx.drawImage(img, 0, 0, width, height);
 
-              // Convert to optimized JPEG data URL
               const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.82);
               callback(compressedDataUrl);
             };
@@ -678,7 +729,6 @@ function initImageManager() {
           reader.readAsDataURL(file);
         };
 
-        // Bind File Upload -> Auto-Compress Base64 Data URL converter
         const fileInput = card.querySelector('.img-mgr-file-input');
         fileInput?.addEventListener('change', (e) => {
           const file = e.target.files[0];
@@ -693,49 +743,216 @@ function initImageManager() {
     });
   }
 
+  // Render Tab 2: Property & Contact Info
+  function renderPropertySettings() {
+    const info = typeof getSiteInfo === 'function' ? getSiteInfo() : {};
+    const propNameInp = modal.querySelector('#cfg-property-name');
+    const taglineInp = modal.querySelector('#cfg-tagline');
+    const addressInp = modal.querySelector('#cfg-address');
+    const phoneInp = modal.querySelector('#cfg-phone');
+    const whatsappInp = modal.querySelector('#cfg-whatsapp');
+
+    if (propNameInp) propNameInp.value = info.propertyName || '';
+    if (taglineInp) taglineInp.value = info.tagline || '';
+    if (addressInp) addressInp.value = info.address || '';
+    if (phoneInp) phoneInp.value = info.phone || '';
+    if (whatsappInp) whatsappInp.value = info.whatsapp || '';
+  }
+
+  // Render Tab 3: Guest Reviews & Guest Names
+  function renderHostReviewsList() {
+    const reviewsListContainer = modal.querySelector('#hostReviewsList');
+    if (!reviewsListContainer) return;
+
+    const reviews = typeof window.getReviews === 'function' ? window.getReviews() : [];
+    reviewsListContainer.innerHTML = '';
+
+    reviews.forEach((rev) => {
+      const revCard = document.createElement('div');
+      revCard.className = 'host-review-card';
+      revCard.innerHTML = `
+        <div class="host-review-card-row">
+          <div>
+            <span class="img-mgr-field-title">Guest Name:</span>
+            <input type="text" class="img-mgr-input host-rev-name" value="${rev.name || ''}" placeholder="Guest Name">
+          </div>
+          <div>
+            <span class="img-mgr-field-title">Stay Information:</span>
+            <input type="text" class="img-mgr-input host-rev-stay" value="${rev.stayInfo || ''}" placeholder="e.g. 2 BHK Suite • 5 Day Stay">
+          </div>
+          <div>
+            <span class="img-mgr-field-title">Rating:</span>
+            <select class="img-mgr-input host-rev-rating">
+              <option value="5" ${rev.rating === 5 ? 'selected' : ''}>5 Stars</option>
+              <option value="4" ${rev.rating === 4 ? 'selected' : ''}>4 Stars</option>
+              <option value="3" ${rev.rating === 3 ? 'selected' : ''}>3 Stars</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <span class="img-mgr-field-title">Review Text:</span>
+          <textarea class="img-mgr-input host-rev-text" rows="2" placeholder="Guest comment...">${rev.text || ''}</textarea>
+        </div>
+        <div style="display:flex; justify-content:flex-end;">
+          <button type="button" class="btn btn-outline-forest btn-sm host-rev-del-btn" style="color:#ef4444; border-color:#ef4444;">
+            <i class="fa-solid fa-trash"></i> Delete Review
+          </button>
+        </div>
+      `;
+
+      reviewsListContainer.appendChild(revCard);
+
+      revCard.querySelector('.host-rev-del-btn')?.addEventListener('click', () => {
+        if (confirm(`Delete review from "${rev.name}"?`)) {
+          revCard.remove();
+        }
+      });
+    });
+
+    const addBtn = modal.querySelector('#addHostReviewBtn');
+    if (addBtn) {
+      addBtn.onclick = () => {
+        const newRev = {
+          name: 'New Guest Name',
+          stayInfo: '2 BHK Suite • 3 Day Stay',
+          rating: 5,
+          text: 'Wonderful experience staying at E2 Homes Raipur! High quality amenities and great service.'
+        };
+        
+        const revCard = document.createElement('div');
+        revCard.className = 'host-review-card';
+        revCard.innerHTML = `
+          <div class="host-review-card-row">
+            <div>
+              <span class="img-mgr-field-title">Guest Name:</span>
+              <input type="text" class="img-mgr-input host-rev-name" value="${newRev.name}" placeholder="Guest Name">
+            </div>
+            <div>
+              <span class="img-mgr-field-title">Stay Information:</span>
+              <input type="text" class="img-mgr-input host-rev-stay" value="${newRev.stayInfo}" placeholder="e.g. 2 BHK Suite • 5 Day Stay">
+            </div>
+            <div>
+              <span class="img-mgr-field-title">Rating:</span>
+              <select class="img-mgr-input host-rev-rating">
+                <option value="5" selected>5 Stars</option>
+                <option value="4">4 Stars</option>
+                <option value="3">3 Stars</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <span class="img-mgr-field-title">Review Text:</span>
+            <textarea class="img-mgr-input host-rev-text" rows="2" placeholder="Guest comment...">${newRev.text}</textarea>
+          </div>
+          <div style="display:flex; justify-content:flex-end;">
+            <button type="button" class="btn btn-outline-forest btn-sm host-rev-del-btn" style="color:#ef4444; border-color:#ef4444;">
+              <i class="fa-solid fa-trash"></i> Delete Review
+            </button>
+          </div>
+        `;
+        reviewsListContainer.prepend(revCard);
+        revCard.querySelector('.host-rev-del-btn')?.addEventListener('click', () => { revCard.remove(); });
+      };
+    }
+  }
+
   // Save changes to LocalStorage and apply
   saveBtn?.addEventListener('click', () => {
+    // 1. Photo Custom Labels & URLs
     const customMap = {};
-    const inputs = container.querySelectorAll('.img-mgr-input');
-    inputs.forEach(input => {
-      const key = input.getAttribute('data-key');
-      const val = input.value.trim();
-      if (key && val) {
-        customMap[key] = val;
+    const cards = container.querySelectorAll('.img-mgr-card');
+    cards.forEach(card => {
+      const labelInput = card.querySelector('.img-mgr-label-input');
+      const urlInput = card.querySelector('.img-mgr-url-input');
+      if (labelInput && urlInput) {
+        const key = labelInput.getAttribute('data-key');
+        const label = labelInput.value.trim();
+        let url = urlInput.value.trim();
+        if (url.startsWith('/assets/')) url = '.' + url;
+
+        if (key && (label || url)) {
+          customMap[key] = { label, url };
+        }
       }
     });
 
-    // Try saving to LocalStorage with fallback if quota is exceeded
     try {
       localStorage.setItem('E2_CUSTOM_SITE_IMAGES', JSON.stringify(customMap));
     } catch (e) {
-      console.warn('LocalStorage quota limit reached, applying live in session memory:', e);
+      console.warn('LocalStorage quota limit reached:', e);
     }
 
-    // Always update global window map for immediate live display
-    if (window.DEFAULT_SITE_IMAGES) {
-      Object.keys(customMap).forEach(k => {
-        if (window.DEFAULT_SITE_IMAGES[k]) {
-          window.DEFAULT_SITE_IMAGES[k].url = customMap[k];
-        }
-      });
+    // 2. Property Settings Info
+    const propNameVal = modal.querySelector('#cfg-property-name')?.value.trim() || 'E2 Homes Raipur';
+    const taglineVal = modal.querySelector('#cfg-tagline')?.value.trim() || 'Comfort. Luxury. Home.';
+    const addressVal = modal.querySelector('#cfg-address')?.value.trim() || '';
+    const phoneVal = modal.querySelector('#cfg-phone')?.value.trim() || '+91 93011 54606';
+    const whatsappVal = modal.querySelector('#cfg-whatsapp')?.value.trim() || '919301154606';
+
+    const updatedSiteInfo = {
+      propertyName: propNameVal,
+      tagline: taglineVal,
+      address: addressVal,
+      phone: phoneVal,
+      whatsapp: whatsappVal
+    };
+    localStorage.setItem('E2_CUSTOM_SITE_INFO', JSON.stringify(updatedSiteInfo));
+    if (typeof applySiteInfo === 'function') {
+      applySiteInfo();
     }
+
+    // 3. Reviews & Guest Names
+    const revCards = modal.querySelectorAll('.host-review-card');
+    const updatedReviews = [];
+    revCards.forEach((card, idx) => {
+      const name = card.querySelector('.host-rev-name')?.value.trim() || 'Guest';
+      const stayInfo = card.querySelector('.host-rev-stay')?.value.trim() || 'Stayed at E2 Homes';
+      const rating = parseInt(card.querySelector('.host-rev-rating')?.value || '5', 10);
+      const text = card.querySelector('.host-rev-text')?.value.trim() || 'Great stay!';
+      const avatar = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'GS';
+
+      updatedReviews.push({
+        id: 'rev_cust_' + idx,
+        name,
+        avatar,
+        rating,
+        category: 'family',
+        stayInfo,
+        text
+      });
+    });
+
+    localStorage.setItem('E2_GUEST_REVIEWS_ALL', JSON.stringify(updatedReviews));
 
     if (typeof applySiteImages === 'function') {
       applySiteImages();
     }
-    showToast('All site images updated and applied successfully!', 'success');
+
+    if (typeof window.refreshReviewsCarousel === 'function') {
+      window.refreshReviewsCarousel();
+    }
+
+    showToast('All custom names, photos, property details & guest reviews saved successfully!', 'success');
     closeImageModal();
   });
 
-  // Reset to default original images
+  // Reset to default original images & names
   resetBtn?.addEventListener('click', () => {
-    if (confirm('Reset all site images back to their original defaults?')) {
+    if (confirm('Reset all site photo names, image URLs, property info & reviews back to defaults?')) {
       localStorage.removeItem('E2_CUSTOM_SITE_IMAGES');
+      localStorage.removeItem('E2_CUSTOM_SITE_INFO');
+      localStorage.removeItem('E2_GUEST_REVIEWS_ALL');
+      
+      if (typeof applySiteInfo === 'function') {
+        applySiteInfo();
+      }
       if (typeof applySiteImages === 'function') {
         applySiteImages();
       }
-      showToast('Images restored to defaults', 'info');
+      if (typeof window.refreshReviewsCarousel === 'function') {
+        window.refreshReviewsCarousel();
+      }
+      showToast('Restored defaults for images, names and reviews', 'info');
       closeImageModal();
     }
   });
@@ -800,6 +1017,336 @@ function initLocalGuideFilter() {
       });
     });
   });
+}
+
+/* --------------------------------------------------------------------------
+   14. GUEST REVIEWS & RATINGS CAROUSEL
+   -------------------------------------------------------------------------- */
+function initGuestReviewsCarousel() {
+  const DEFAULT_REVIEWS = [
+    {
+      id: 'rev_1',
+      name: 'Rajesh Verma',
+      avatar: 'RA',
+      rating: 5,
+      category: 'medical',
+      stayInfo: 'Medical Attendant • 10 Day Stay',
+      text: 'E2 Homes was a blessing during my mother\'s treatment at Shri Venkatesh Superspeciality Hospital. The close proximity made daily visits effortless, and having a full kitchen allowed us to cook her prescribed home food. Exceptionally clean and peaceful!'
+    },
+    {
+      id: 'rev_2',
+      name: 'Sneha Patel',
+      avatar: 'SP',
+      rating: 5,
+      category: 'family',
+      stayInfo: 'Family Staycation • 2 BHK Suite',
+      text: 'One of the finest homestays in Raipur! Empresia Elite is a modern gated society with great security. The suite is beautifully furnished, WiFi is lightning fast, and host assistance was 10/10.'
+    },
+    {
+      id: 'rev_3',
+      name: 'Amitabh Mukherjee',
+      avatar: 'AM',
+      rating: 5,
+      category: 'business',
+      stayInfo: 'Business Traveler • 5 Day Stay',
+      text: 'As a corporate consultant visiting Naya Raipur & Sector 8A, E2 Homes offered far better value than 4-star hotels. Spacious living room, high-speed WiFi, and hassle-free parking. Highly recommended!'
+    },
+    {
+      id: 'rev_4',
+      name: 'Dr. Ananya Sharma',
+      avatar: 'AS',
+      rating: 5,
+      category: 'medical',
+      stayInfo: 'Medical Specialist • 12 Day Stay',
+      text: 'Stayed for 12 days while attending a medical conference and visiting VY Hospital. E2 Homes exceeded my expectations! Fresh linen, spotless bathrooms, quiet atmosphere, and proactive host support.'
+    },
+    {
+      id: 'rev_5',
+      name: 'Pankaj Agarwal',
+      avatar: 'PA',
+      rating: 5,
+      category: 'family',
+      stayInfo: 'Family Group • 3 BHK Stay',
+      text: 'We booked the 3 BHK Royal Grand Suite for our extended family attending a wedding near Kamal Vihar. The apartment was super spacious, fully air-conditioned, and had safe gated parking for both our cars!'
+    },
+    {
+      id: 'rev_6',
+      name: 'Vikram Singh',
+      avatar: 'VS',
+      rating: 5,
+      category: 'longstay',
+      stayInfo: 'NRI Guest • 2 BHK Suite',
+      text: 'Visiting Raipur from Dubai to meet relatives. E2 Homes felt like a luxury home away from home. High-speed WiFi for work calls, RO water, automatic power backup, and top security in Empresia Elite.'
+    }
+  ];
+
+  const getReviews = () => {
+    try {
+      const storedAll = localStorage.getItem('E2_GUEST_REVIEWS_ALL');
+      if (storedAll) {
+        return JSON.parse(storedAll);
+      }
+      const stored = localStorage.getItem('E2_GUEST_REVIEWS');
+      const userRevs = stored ? JSON.parse(stored) : [];
+      return [...userRevs, ...DEFAULT_REVIEWS];
+    } catch (e) {
+      return DEFAULT_REVIEWS;
+    }
+  };
+
+  window.getReviews = getReviews;
+
+  const reviewsTrack = document.getElementById('reviewsTrack');
+  const reviewsViewport = document.getElementById('reviewsViewport');
+  const prevBtn = document.getElementById('reviewsPrevBtn');
+  const nextBtn = document.getElementById('reviewsNextBtn');
+  const dotsContainer = document.getElementById('reviewsDots');
+  const filterChips = document.querySelectorAll('.review-filter-chip');
+  const autoplayToggle = document.getElementById('reviewsAutoplayToggle');
+  const totalCountEl = document.getElementById('total-reviews-count');
+
+  if (!reviewsTrack || !reviewsViewport) return;
+
+  let currentFilter = 'all';
+  let currentIndex = 0;
+  let autoPlayInterval = null;
+  let isAutoplayPlaying = true;
+  let activeFilteredReviews = [];
+
+  const updateCounts = (allReviews) => {
+    const counts = { all: allReviews.length, medical: 0, family: 0, business: 0, longstay: 0 };
+    allReviews.forEach(r => {
+      if (counts[r.category] !== undefined) counts[r.category]++;
+    });
+
+    Object.keys(counts).forEach(cat => {
+      const el = document.getElementById(`count-${cat}`);
+      if (el) el.textContent = counts[cat];
+    });
+
+    if (totalCountEl) {
+      totalCountEl.textContent = `${allReviews.length + 115}+`;
+    }
+  };
+
+  const getCardsPerPage = () => {
+    const width = window.innerWidth;
+    if (width <= 640) return 1;
+    if (width <= 992) return 2;
+    return 3;
+  };
+
+  const renderCarousel = () => {
+    const allReviews = getReviews();
+    updateCounts(allReviews);
+
+    activeFilteredReviews = currentFilter === 'all' 
+      ? allReviews 
+      : allReviews.filter(r => r.category === currentFilter);
+
+    reviewsTrack.innerHTML = '';
+
+    if (activeFilteredReviews.length === 0) {
+      reviewsTrack.innerHTML = `
+        <div style="padding: 2.5rem; text-align: center; width: 100%; color: var(--color-gray-muted);">
+          <i class="fa-solid fa-comments" style="font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.5;"></i>
+          <p>No reviews in this category yet. Be the first to leave feedback!</p>
+        </div>
+      `;
+      if (dotsContainer) dotsContainer.innerHTML = '';
+      return;
+    }
+
+    activeFilteredReviews.forEach(r => {
+      const slide = document.createElement('div');
+      slide.className = 'review-card-slide';
+
+      const starsHtml = Array.from({ length: r.rating || 5 }, () => '<i class="fa-solid fa-star"></i>').join('');
+
+      slide.innerHTML = `
+        <div class="review-card">
+          <div>
+            <div class="review-card-stars">${starsHtml}</div>
+            <p class="review-text">"${r.text}"</p>
+          </div>
+          <div class="reviewer-profile">
+            <div class="reviewer-avatar">${r.avatar || 'EG'}</div>
+            <div class="reviewer-info">
+              <h4>${r.name}</h4>
+              <span class="reviewer-tag">
+                <i class="fa-solid fa-circle-check" style="color: var(--color-gold);"></i> 
+                ${r.stayInfo || 'Verified Stay'}
+              </span>
+            </div>
+          </div>
+        </div>
+      `;
+      reviewsTrack.appendChild(slide);
+    });
+
+    updatePosition();
+    renderDots();
+  };
+
+  window.refreshReviewsCarousel = renderCarousel;
+
+  const updatePosition = () => {
+    const cardsPerPage = getCardsPerPage();
+    const maxIndex = Math.max(0, activeFilteredReviews.length - cardsPerPage);
+    if (currentIndex > maxIndex) currentIndex = maxIndex;
+    if (currentIndex < 0) currentIndex = 0;
+
+    const slideWidthPercent = 100 / cardsPerPage;
+    reviewsTrack.style.transform = `translateX(-${currentIndex * slideWidthPercent}%)`;
+
+    if (prevBtn) prevBtn.disabled = currentIndex === 0;
+    if (nextBtn) nextBtn.disabled = currentIndex >= maxIndex || activeFilteredReviews.length <= cardsPerPage;
+
+    updateActiveDot();
+  };
+
+  const renderDots = () => {
+    if (!dotsContainer) return;
+    const cardsPerPage = getCardsPerPage();
+    const totalDots = Math.max(1, activeFilteredReviews.length - cardsPerPage + 1);
+
+    dotsContainer.innerHTML = '';
+    if (totalDots <= 1) return;
+
+    for (let i = 0; i < totalDots; i++) {
+      const dot = document.createElement('div');
+      dot.className = `reviews-dot ${i === currentIndex ? 'active' : ''}`;
+      dot.addEventListener('click', () => {
+        currentIndex = i;
+        updatePosition();
+        resetAutoplay();
+      });
+      dotsContainer.appendChild(dot);
+    }
+  };
+
+  const updateActiveDot = () => {
+    if (!dotsContainer) return;
+    const dots = dotsContainer.querySelectorAll('.reviews-dot');
+    dots.forEach((dot, idx) => {
+      dot.classList.toggle('active', idx === currentIndex);
+    });
+  };
+
+  // Nav Button Events
+  prevBtn?.addEventListener('click', () => {
+    currentIndex = Math.max(0, currentIndex - 1);
+    updatePosition();
+    resetAutoplay();
+  });
+
+  nextBtn?.addEventListener('click', () => {
+    const cardsPerPage = getCardsPerPage();
+    const maxIndex = Math.max(0, activeFilteredReviews.length - cardsPerPage);
+    if (currentIndex >= maxIndex) {
+      currentIndex = 0;
+    } else {
+      currentIndex++;
+    }
+    updatePosition();
+    resetAutoplay();
+  });
+
+  // Filter Chips Events
+  filterChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      filterChips.forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      currentFilter = chip.getAttribute('data-filter') || 'all';
+      currentIndex = 0;
+      renderCarousel();
+      resetAutoplay();
+    });
+  });
+
+  // Touch Swipe & Drag Support
+  let startX = 0;
+  let isDragging = false;
+
+  reviewsViewport.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+    isDragging = true;
+    stopAutoplay();
+  }, { passive: true });
+
+  reviewsViewport.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    const currentX = e.touches[0].clientX;
+    const diff = currentX - startX;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0 && currentIndex > 0) {
+        currentIndex--;
+        isDragging = false;
+        updatePosition();
+      } else if (diff < 0) {
+        const cardsPerPage = getCardsPerPage();
+        if (currentIndex < activeFilteredReviews.length - cardsPerPage) {
+          currentIndex++;
+          isDragging = false;
+          updatePosition();
+        }
+      }
+    }
+  }, { passive: true });
+
+  reviewsViewport.addEventListener('touchend', () => {
+    isDragging = false;
+    startAutoplay();
+  });
+
+  // AutoPlay Loop
+  const startAutoplay = () => {
+    if (!isAutoplayPlaying) return;
+    clearInterval(autoPlayInterval);
+    autoPlayInterval = setInterval(() => {
+      const cardsPerPage = getCardsPerPage();
+      const maxIndex = Math.max(0, activeFilteredReviews.length - cardsPerPage);
+      if (maxIndex <= 0) return;
+
+      if (currentIndex >= maxIndex) {
+        currentIndex = 0;
+      } else {
+        currentIndex++;
+      }
+      updatePosition();
+    }, 5000);
+  };
+
+  const stopAutoplay = () => {
+    clearInterval(autoPlayInterval);
+  };
+
+  const resetAutoplay = () => {
+    stopAutoplay();
+    startAutoplay();
+  };
+
+  reviewsViewport.addEventListener('mouseenter', stopAutoplay);
+  reviewsViewport.addEventListener('mouseleave', startAutoplay);
+
+  autoplayToggle?.addEventListener('click', () => {
+    isAutoplayPlaying = !isAutoplayPlaying;
+    if (isAutoplayPlaying) {
+      autoplayToggle.innerHTML = '<i class="fa-solid fa-pause"></i> <span>Pause Auto-play</span>';
+      startAutoplay();
+    } else {
+      autoplayToggle.innerHTML = '<i class="fa-solid fa-play"></i> <span>Resume Auto-play</span>';
+      stopAutoplay();
+    }
+  });
+
+  window.addEventListener('resize', () => {
+    updatePosition();
+    renderDots();
+  });
+
+  renderCarousel();
+  startAutoplay();
 }
 
 
