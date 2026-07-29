@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initImageManager();
   initLocalGuideFilter();
   initGuestReviewsCarousel();
+  renderSiteSuites();
 });
 
 /* --------------------------------------------------------------------------
@@ -368,7 +369,7 @@ function initBackToTop() {
    8. SCROLL INTERSECTION ANIMATIONS
    -------------------------------------------------------------------------- */
 function initScrollAnimations() {
-  const animElements = document.querySelectorAll('.animate-on-scroll');
+  const animElements = document.querySelectorAll('.animate-on-scroll:not(.animated)');
 
   if ('IntersectionObserver' in window) {
     const observer = new IntersectionObserver((entries) => {
@@ -379,15 +380,30 @@ function initScrollAnimations() {
         }
       });
     }, {
-      threshold: 0.15,
-      rootMargin: '0px 0px -50px 0px'
+      threshold: 0.02,
+      rootMargin: '120px 0px 120px 0px'
     });
 
-    animElements.forEach(el => observer.observe(el));
+    animElements.forEach(el => {
+      observer.observe(el);
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight + 120 && rect.bottom > -100) {
+        el.classList.add('animated');
+      }
+    });
   } else {
-    // Fallback if IntersectionObserver is unsupported
     animElements.forEach(el => el.classList.add('animated'));
   }
+
+  // Fallback safety check to make sure visible elements reveal immediately
+  setTimeout(() => {
+    document.querySelectorAll('.animate-on-scroll:not(.animated)').forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight + 200) {
+        el.classList.add('animated');
+      }
+    });
+  }, 300);
 }
 
 /* --------------------------------------------------------------------------
@@ -538,6 +554,7 @@ function initImageManager() {
       return;
     }
     renderImageList();
+    renderHostSuitesList();
     renderPropertySettings();
     renderHostReviewsList();
     modal.classList.add('active');
@@ -743,7 +760,197 @@ function initImageManager() {
     });
   }
 
-  // Render Tab 2: Property & Contact Info
+  // Render Tab 2: Suites & Bedrooms Management
+  function renderHostSuitesList() {
+    const suitesListContainer = modal.querySelector('#hostSuitesList');
+    if (!suitesListContainer) return;
+
+    const suites = getSuites();
+    const siteImages = typeof getActiveSiteImages === 'function' ? getActiveSiteImages() : {};
+    suitesListContainer.innerHTML = '';
+
+    const photoOptions = Object.keys(siteImages).map(k => {
+      const item = siteImages[k];
+      return `<option value="${k}">${k} (${item.label || 'Photo'})</option>`;
+    }).join('');
+
+    suites.forEach((suite, idx) => {
+      const card = document.createElement('div');
+      card.className = 'host-suite-card';
+      card.setAttribute('data-suite-id', suite.id || 'suite_' + idx);
+
+      let featuresStr = Array.isArray(suite.features) ? suite.features.join(', ') : (suite.features || '');
+      let currentKey = suite.imgKey || ('gallery-' + ((idx % 8) + 1));
+      if (currentKey === 'livingRoom') currentKey = 'gallery-1';
+      if (currentKey === 'bedroom') currentKey = 'gallery-2';
+      if (currentKey === 'masterBedroom') currentKey = 'gallery-3';
+
+      card.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #f1f5f9; padding-bottom:0.4rem; margin-bottom:0.4rem;">
+          <span class="img-mgr-field-title" style="font-size:0.85rem;"><i class="fa-solid fa-bed"></i> Bedroom / Suite #${idx + 1}</span>
+          <button type="button" class="btn btn-outline-forest btn-sm host-suite-del-btn" style="color:#ef4444; border-color:#ef4444; padding:0.25rem 0.5rem; font-size:0.75rem;">
+            <i class="fa-solid fa-trash"></i> Delete
+          </button>
+        </div>
+
+        <div class="host-suite-card-grid">
+          <div>
+            <span class="img-mgr-field-title">Suite Title (e.g. 4 BHK Villa):</span>
+            <input type="text" class="img-mgr-input suite-title-inp" value="${suite.title || ''}" placeholder="e.g. 4 BHK Villa">
+          </div>
+          <div>
+            <span class="img-mgr-field-title">Tagline / Capacity:</span>
+            <input type="text" class="img-mgr-input suite-tagline-inp" value="${suite.tagline || ''}" placeholder="e.g. Ideal for 8-12 Guests">
+          </div>
+          <div>
+            <span class="img-mgr-field-title">Guests Capacity:</span>
+            <input type="text" class="img-mgr-input suite-guests-inp" value="${suite.guests || ''}" placeholder="e.g. 8-12 Guests">
+          </div>
+          <div>
+            <span class="img-mgr-field-title">Size / Area:</span>
+            <input type="text" class="img-mgr-input suite-size-inp" value="${suite.size || ''}" placeholder="e.g. 2,000 sq. ft.">
+          </div>
+          <div>
+            <span class="img-mgr-field-title">Price Tag:</span>
+            <input type="text" class="img-mgr-input suite-price-inp" value="${suite.price || ''}" placeholder="e.g. ₹5,999 / night">
+          </div>
+          <div>
+            <span class="img-mgr-field-title">Badge Label:</span>
+            <input type="text" class="img-mgr-input suite-badge-inp" value="${suite.badge || ''}" placeholder="e.g. Royal Luxury">
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.6rem; margin-top:0.4rem;">
+          <div>
+            <span class="img-mgr-field-title">Linked Photo from Photo Manager:</span>
+            <select class="img-mgr-input suite-imgkey-select">
+              ${Object.keys(siteImages).map(k => {
+                const item = siteImages[k];
+                const sel = k === currentKey ? 'selected' : '';
+                return `<option value="${k}" ${sel}>${item.label || k} (${k})</option>`;
+              }).join('')}
+            </select>
+          </div>
+          <div>
+            <span class="img-mgr-field-title">Or Direct Custom Image URL (optional):</span>
+            <input type="text" class="img-mgr-input suite-imgurl-inp" value="${suite.imgUrl || ''}" placeholder="Paste URL or leave empty to use linked photo">
+          </div>
+        </div>
+
+        <div style="margin-top:0.4rem;">
+          <span class="img-mgr-field-title">Description:</span>
+          <textarea class="img-mgr-input suite-desc-inp" rows="2" placeholder="Suite description...">${suite.desc || ''}</textarea>
+        </div>
+
+        <div style="margin-top:0.4rem;">
+          <span class="img-mgr-field-title">Features / Amenities (comma separated):</span>
+          <input type="text" class="img-mgr-input suite-features-inp" value="${featuresStr}" placeholder="e.g. 4 AC Master Bedrooms, Private Balcony, Jacuzzi, Full Kitchen">
+        </div>
+      `;
+
+      suitesListContainer.appendChild(card);
+
+      card.querySelector('.host-suite-del-btn')?.addEventListener('click', () => {
+        if (confirm(`Delete suite "${suite.title}"?`)) {
+          card.remove();
+        }
+      });
+    });
+
+    const addSuiteBtn = modal.querySelector('#addHostSuiteBtn');
+    if (addSuiteBtn) {
+      addSuiteBtn.onclick = () => {
+        const newIdx = suitesListContainer.children.length + 1;
+        const newKey = 'gallery-' + (((newIdx - 1) % 8) + 1);
+        const newSuite = {
+          id: 'suite_custom_' + Date.now(),
+          badge: 'New Suite',
+          badgeType: '',
+          title: `${newIdx} BHK Luxury Suite`,
+          tagline: `Ideal for ${newIdx * 2} Guests • Premium Living`,
+          desc: `A newly added fully-furnished ${newIdx} BHK apartment suite with air-conditioned bedrooms, living room, washroom, and kitchen facilities.`,
+          guests: `${newIdx * 2} Guests`,
+          size: `${newIdx * 350} sq. ft.`,
+          imgKey: newKey,
+          imgUrl: '',
+          price: 'Contact for Price',
+          features: ['Air Conditioned Bedrooms', 'Living Room & Dining', 'RO Water & Kitchen', 'High Speed Wi-Fi']
+        };
+
+        const card = document.createElement('div');
+        card.className = 'host-suite-card';
+        card.setAttribute('data-suite-id', newSuite.id);
+
+        card.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #f1f5f9; padding-bottom:0.4rem; margin-bottom:0.4rem;">
+            <span class="img-mgr-field-title" style="font-size:0.85rem;"><i class="fa-solid fa-bed"></i> Bedroom / Suite #${newIdx}</span>
+            <button type="button" class="btn btn-outline-forest btn-sm host-suite-del-btn" style="color:#ef4444; border-color:#ef4444; padding:0.25rem 0.5rem; font-size:0.75rem;">
+              <i class="fa-solid fa-trash"></i> Delete
+            </button>
+          </div>
+
+          <div class="host-suite-card-grid">
+            <div>
+              <span class="img-mgr-field-title">Suite Title:</span>
+              <input type="text" class="img-mgr-input suite-title-inp" value="${newSuite.title}" placeholder="e.g. 4 BHK Villa">
+            </div>
+            <div>
+              <span class="img-mgr-field-title">Tagline:</span>
+              <input type="text" class="img-mgr-input suite-tagline-inp" value="${newSuite.tagline}" placeholder="e.g. Ideal for 8 Guests">
+            </div>
+            <div>
+              <span class="img-mgr-field-title">Guests Capacity:</span>
+              <input type="text" class="img-mgr-input suite-guests-inp" value="${newSuite.guests}" placeholder="e.g. 8 Guests">
+            </div>
+            <div>
+              <span class="img-mgr-field-title">Size / Area:</span>
+              <input type="text" class="img-mgr-input suite-size-inp" value="${newSuite.size}" placeholder="e.g. 1,800 sq. ft.">
+            </div>
+            <div>
+              <span class="img-mgr-field-title">Price Tag:</span>
+              <input type="text" class="img-mgr-input suite-price-inp" value="${newSuite.price}" placeholder="e.g. ₹5,999 / night">
+            </div>
+            <div>
+              <span class="img-mgr-field-title">Badge Label:</span>
+              <input type="text" class="img-mgr-input suite-badge-inp" value="${newSuite.badge}">
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.6rem; margin-top:0.4rem;">
+            <div>
+              <span class="img-mgr-field-title">Linked Photo from Photo Manager:</span>
+              <select class="img-mgr-input suite-imgkey-select">
+                ${Object.keys(siteImages).map(k => {
+                  const item = siteImages[k];
+                  const sel = k === newKey ? 'selected' : '';
+                  return `<option value="${k}" ${sel}>${item.label || k} (${k})</option>`;
+                }).join('')}
+              </select>
+            </div>
+            <div>
+              <span class="img-mgr-field-title">Or Direct Custom Image URL (optional):</span>
+              <input type="text" class="img-mgr-input suite-imgurl-inp" value="" placeholder="Paste URL or leave empty">
+            </div>
+          </div>
+
+          <div style="margin-top:0.4rem;">
+            <span class="img-mgr-field-title">Description:</span>
+            <textarea class="img-mgr-input suite-desc-inp" rows="2" placeholder="Suite description...">${newSuite.desc}</textarea>
+          </div>
+
+          <div style="margin-top:0.4rem;">
+            <span class="img-mgr-field-title">Features / Amenities (comma separated):</span>
+            <input type="text" class="img-mgr-input suite-features-inp" value="${newSuite.features.join(', ')}">
+          </div>
+        `;
+
+        suitesListContainer.prepend(card);
+        card.querySelector('.host-suite-del-btn')?.addEventListener('click', () => { card.remove(); });
+      };
+    }
+  }
+
+  // Render Tab 3: Property & Contact Info
   function renderPropertySettings() {
     const info = typeof getSiteInfo === 'function' ? getSiteInfo() : {};
     const propNameInp = modal.querySelector('#cfg-property-name');
@@ -759,7 +966,7 @@ function initImageManager() {
     if (whatsappInp) whatsappInp.value = info.whatsapp || '';
   }
 
-  // Render Tab 3: Guest Reviews & Guest Names
+  // Render Tab 4: Guest Reviews & Guest Names
   function renderHostReviewsList() {
     const reviewsListContainer = modal.querySelector('#hostReviewsList');
     if (!reviewsListContainer) return;
@@ -882,7 +1089,43 @@ function initImageManager() {
       console.warn('LocalStorage quota limit reached:', e);
     }
 
-    // 2. Property Settings Info
+    // 2. Suites & Bedrooms Customization
+    const suiteCards = modal.querySelectorAll('.host-suite-card');
+    const updatedSuites = [];
+    suiteCards.forEach((card, idx) => {
+      const title = card.querySelector('.suite-title-inp')?.value.trim() || 'Apartment Suite';
+      const tagline = card.querySelector('.suite-tagline-inp')?.value.trim() || '';
+      const guests = card.querySelector('.suite-guests-inp')?.value.trim() || '1-4 Guests';
+      const size = card.querySelector('.suite-size-inp')?.value.trim() || '800 sq. ft.';
+      const price = card.querySelector('.suite-price-inp')?.value.trim() || 'Contact for Price';
+      const badge = card.querySelector('.suite-badge-inp')?.value.trim() || '';
+      const desc = card.querySelector('.suite-desc-inp')?.value.trim() || '';
+      const featStr = card.querySelector('.suite-features-inp')?.value.trim() || '';
+      const features = featStr ? featStr.split(',').map(s => s.trim()).filter(Boolean) : [];
+
+      const imgKey = card.querySelector('.suite-imgkey-select')?.value || ('gallery-' + ((idx % 8) + 1));
+      const imgUrl = card.querySelector('.suite-imgurl-inp')?.value.trim() || '';
+
+      updatedSuites.push({
+        id: card.getAttribute('data-suite-id') || 'suite_' + idx,
+        badge,
+        badgeType: badge.toLowerCase().includes('popular') || badge.toLowerCase().includes('featured') ? 'featured' : '',
+        title,
+        tagline,
+        desc,
+        guests,
+        size,
+        imgKey,
+        imgUrl,
+        price,
+        features
+      });
+    });
+
+    localStorage.setItem('E2_CUSTOM_SUITES', JSON.stringify(updatedSuites));
+    renderSiteSuites();
+
+    // 3. Property Settings Info
     const propNameVal = modal.querySelector('#cfg-property-name')?.value.trim() || 'E2 Homes Raipur';
     const taglineVal = modal.querySelector('#cfg-tagline')?.value.trim() || 'Comfort. Luxury. Home.';
     const addressVal = modal.querySelector('#cfg-address')?.value.trim() || '';
@@ -901,7 +1144,7 @@ function initImageManager() {
       applySiteInfo();
     }
 
-    // 3. Reviews & Guest Names
+    // 4. Reviews & Guest Names
     const revCards = modal.querySelectorAll('.host-review-card');
     const updatedReviews = [];
     revCards.forEach((card, idx) => {
@@ -932,17 +1175,19 @@ function initImageManager() {
       window.refreshReviewsCarousel();
     }
 
-    showToast('All custom names, photos, property details & guest reviews saved successfully!', 'success');
+    showToast('All custom bedrooms, suites, photos, property details & guest reviews saved successfully!', 'success');
     closeImageModal();
   });
 
   // Reset to default original images & names
   resetBtn?.addEventListener('click', () => {
-    if (confirm('Reset all site photo names, image URLs, property info & reviews back to defaults?')) {
+    if (confirm('Reset all site bedrooms, photo names, image URLs, property info & reviews back to defaults?')) {
       localStorage.removeItem('E2_CUSTOM_SITE_IMAGES');
       localStorage.removeItem('E2_CUSTOM_SITE_INFO');
       localStorage.removeItem('E2_GUEST_REVIEWS_ALL');
+      localStorage.removeItem('E2_CUSTOM_SUITES');
       
+      renderSiteSuites();
       if (typeof applySiteInfo === 'function') {
         applySiteInfo();
       }
@@ -952,7 +1197,7 @@ function initImageManager() {
       if (typeof window.refreshReviewsCarousel === 'function') {
         window.refreshReviewsCarousel();
       }
-      showToast('Restored defaults for images, names and reviews', 'info');
+      showToast('Restored defaults for suites, images, names and reviews', 'info');
       closeImageModal();
     }
   });
@@ -1314,7 +1559,7 @@ function initGuestReviewsCarousel() {
         currentIndex++;
       }
       updatePosition();
-    }, 5000);
+    }, 4000);
   };
 
   const stopAutoplay = () => {
@@ -1326,8 +1571,25 @@ function initGuestReviewsCarousel() {
     startAutoplay();
   };
 
-  reviewsViewport.addEventListener('mouseenter', stopAutoplay);
-  reviewsViewport.addEventListener('mouseleave', startAutoplay);
+  reviewsViewport.addEventListener('mouseenter', (e) => {
+    if (e.pointerType !== 'touch') {
+      stopAutoplay();
+    }
+  });
+
+  reviewsViewport.addEventListener('mouseleave', () => {
+    if (isAutoplayPlaying) {
+      startAutoplay();
+    }
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      stopAutoplay();
+    } else if (isAutoplayPlaying) {
+      startAutoplay();
+    }
+  });
 
   autoplayToggle?.addEventListener('click', () => {
     isAutoplayPlaying = !isAutoplayPlaying;
@@ -1347,6 +1609,132 @@ function initGuestReviewsCarousel() {
 
   renderCarousel();
   startAutoplay();
+}
+
+/* --------------------------------------------------------------------------
+   14. DYNAMIC SUITES & BEDROOMS ENGINE
+   -------------------------------------------------------------------------- */
+const DEFAULT_SUITES = [
+  {
+    id: 'suite-1bhk',
+    badge: 'Popular for Business & Medical',
+    badgeType: '',
+    title: '1 BHK Executive Apartment',
+    tagline: 'Ideal for 1-3 Guests • High Speed WiFi',
+    desc: 'A private fully-furnished 1 BHK suite featuring a serene AC Master Bedroom, an inviting living room lounge, private washroom, and an attached kitchenette.',
+    guests: '1-3 Guests',
+    size: '650 sq. ft.',
+    imgKey: 'gallery-1',
+    imgUrl: '',
+    price: '₹1,999 / night',
+    features: ['1 AC King Master Bedroom', 'Living Lounge with LED TV', 'Kitchenette & RO Purifier', 'High-Speed Wi-Fi & Work Desk']
+  },
+  {
+    id: 'suite-2bhk',
+    badge: 'Most Popular for Families',
+    badgeType: 'featured',
+    title: '2 BHK Deluxe Family Suite',
+    tagline: 'Ideal for 4-6 Guests • Spacious Living',
+    desc: 'Spacious 2 BHK family suite equipped with two air-conditioned bedrooms, large living room with sofa set, dining area, balcony views, and full kitchen.',
+    guests: '4-6 Guests',
+    size: '1,100 sq. ft.',
+    imgKey: 'gallery-2',
+    imgUrl: '',
+    price: '₹2,999 / night',
+    features: ['2 AC Bedrooms + 2 Washrooms', 'Expansive Living & Dining Room', 'Fully Equipped Kitchen', 'Private Balcony with City View']
+  },
+  {
+    id: 'suite-3bhk',
+    badge: 'Grand Stays & Groups',
+    badgeType: '',
+    title: '3 BHK Royal Grand Suite',
+    tagline: 'Ideal for 6-10 Guests • Luxury Living',
+    desc: 'Our flagship 3 BHK luxury apartment offering 3 air-conditioned bedrooms, opulent living hall, full kitchen setup, and premium furnishings for large families or groups.',
+    guests: '6-10 Guests',
+    size: '1,550 sq. ft.',
+    imgKey: 'gallery-3',
+    imgUrl: '',
+    price: '₹4,499 / night',
+    features: ['3 AC Master Bedrooms', '3 Washrooms + Premium Toiletries', 'Grand Living Hall & 6-Seat Dining', 'Full Modular Kitchen + Washing Area']
+  }
+];
+
+function getSuites() {
+  const saved = localStorage.getItem('E2_CUSTOM_SUITES');
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed) && parsed.length) return parsed;
+    } catch (e) {
+      console.warn('Failed to parse saved suites:', e);
+    }
+  }
+  return DEFAULT_SUITES;
+}
+
+function renderSiteSuites() {
+  const grid = document.getElementById('apartmentsGrid');
+  if (!grid) return;
+
+  const suites = getSuites();
+  if (!suites || !suites.length) return;
+
+  grid.innerHTML = '';
+  const siteImages = typeof getActiveSiteImages === 'function' ? getActiveSiteImages() : {};
+
+  suites.forEach((suite, idx) => {
+    let keyToUse = suite.imgKey || ('gallery-' + ((idx % 8) + 1));
+    if (keyToUse === 'livingRoom') keyToUse = 'gallery-1';
+    if (keyToUse === 'bedroom') keyToUse = 'gallery-2';
+    if (keyToUse === 'masterBedroom') keyToUse = 'gallery-3';
+
+    let imgSrc = suite.imgUrl || siteImages[keyToUse]?.url || siteImages['gallery-1']?.url || './assets/real-red-sofa-living.svg';
+    if (imgSrc && imgSrc.startsWith('/assets/')) imgSrc = '.' + imgSrc;
+
+    const isFeatured = suite.badgeType === 'featured';
+    const card = document.createElement('div');
+    card.className = `apartment-card ${isFeatured ? 'apt-featured' : ''} animate-on-scroll animated`;
+    
+    let featuresList = [];
+    if (Array.isArray(suite.features)) {
+      featuresList = suite.features;
+    } else if (typeof suite.features === 'string') {
+      featuresList = suite.features.split(',').map(f => f.trim()).filter(Boolean);
+    }
+
+    const featuresHtml = featuresList.map(f => `<span><i class="fa-solid fa-check"></i> ${f}</span>`).join('');
+    const encodedMsg = encodeURIComponent(`Hello E2 Homes, I want to inquire about booking the ${suite.title}.`);
+
+    card.innerHTML = `
+      <div class="apt-header">
+        <span class="apt-badge ${isFeatured ? 'badge-popular' : ''}">
+          <i class="fa-solid ${isFeatured ? 'fa-fire' : 'fa-house'}"></i> ${suite.badge || suite.title}
+        </span>
+        <span class="apt-capacity"><i class="fa-solid fa-user-group"></i> ${suite.guests || '1 - 4 Guests'}</span>
+      </div>
+      <div class="apt-image-box">
+        <img src="${imgSrc}" data-img-key="${keyToUse}" alt="${suite.title} - E2 Homes" class="apt-img" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='./assets/real-red-sofa-living.svg';">
+      </div>
+      <div class="apt-body">
+        <h3>${suite.title}</h3>
+        <p class="apt-location"><i class="fa-solid fa-location-dot" style="color: var(--color-gold);"></i> Empresia Elite, Sector 8A Kamal Vihar</p>
+        <p class="apt-desc">${suite.desc || suite.tagline || ''}</p>
+        <div class="apt-features-list">
+          ${featuresHtml}
+        </div>
+      </div>
+      <div class="apt-footer">
+        <a href="https://wa.me/919301154606?text=${encodedMsg}" target="_blank" rel="noopener noreferrer" class="btn ${isFeatured ? 'btn-gold' : 'btn-whatsapp'} w-full">
+          <i class="fa-brands fa-whatsapp"></i> Inquire ${suite.title}
+        </a>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  if (typeof initScrollAnimations === 'function') {
+    initScrollAnimations();
+  }
 }
 
 
