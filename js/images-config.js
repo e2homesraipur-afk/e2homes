@@ -146,6 +146,23 @@ function getActiveSiteImages() {
     }
   }
 
+  // Purge legacy invalid links or broken stored mappings in customMap
+  let customChanged = false;
+  Object.keys(customMap).forEach(key => {
+    const customVal = customMap[key];
+    const urlStr = typeof customVal === 'string' ? customVal : (customVal && customVal.url ? customVal.url : '');
+    // Remove empty or broken custom image overrides
+    if (!urlStr || urlStr === './assets/red-sofa.avif') {
+      delete customMap[key];
+      customChanged = true;
+    }
+  });
+  if (customChanged) {
+    try {
+      localStorage.setItem('E2_CUSTOM_SITE_IMAGES', JSON.stringify(customMap));
+    } catch (e) {}
+  }
+
   const activeMap = {};
 
   // Process defaults
@@ -203,12 +220,36 @@ function getActiveSiteImages() {
 function applySiteImages() {
   const imagesMap = getActiveSiteImages();
   
+  const FALLBACK_MAP = {
+    'hero-slide-1': './assets/real-red-sofa-living.svg',
+    'hero-slide-2': './assets/real-green-sofa-living.svg',
+    'hero-slide-3': './assets/real-floral-sofa-living.svg',
+    'hero-slide-4': './assets/real-master-bedroom.svg',
+    'about-primary': './assets/real-red-sofa-living.svg',
+    'about-secondary': './assets/real-master-bedroom.svg',
+    'gallery-1': './assets/real-red-sofa-living.svg',
+    'gallery-2': './assets/real-green-sofa-living.svg',
+    'gallery-3': './assets/real-floral-sofa-living.svg',
+    'gallery-4': './assets/real-master-bedroom.svg',
+    'gallery-5': './assets/real-kitchen-dining.svg',
+    'gallery-6': './assets/real-master-bedroom.svg',
+    'gallery-7': './assets/real-kitchen-dining.svg',
+    'gallery-8': './assets/real-kitchen-dining.svg'
+  };
+
   Object.keys(imagesMap).forEach(key => {
     const item = imagesMap[key];
     if (!item) return;
 
     const imgElements = document.querySelectorAll(`img[data-img-key="${key}"]`);
     imgElements.forEach(img => {
+      // Add fallback error handler if image fails to load (e.g. 404 on missing AVIF file)
+      img.onerror = function() {
+        this.onerror = null;
+        const fb = FALLBACK_MAP[key] || './assets/real-red-sofa-living.svg';
+        this.src = fb;
+      };
+
       if (item.url) {
         img.src = item.url;
         img.setAttribute('src', item.url);
@@ -216,12 +257,6 @@ function applySiteImages() {
       if (item.label) {
         img.alt = item.label;
       }
-
-      // Add fallback error handler if image fails to load
-      img.onerror = function() {
-        this.onerror = null;
-        this.src = './assets/red-sofa.avif';
-      };
 
       // If wrapped in a gallery lightbox anchor, update lightbox link target as well
       const parentAnchor = img.closest('a');
@@ -239,7 +274,7 @@ function applySiteImages() {
   });
 
   // Dynamically update social share meta tags (Open Graph & Twitter card)
-  const heroShareImg = imagesMap['hero']?.url || imagesMap['gallery-1']?.url || 'assets/real-red-sofa-living.svg';
+  const heroShareImg = imagesMap['hero']?.url || imagesMap['gallery-1']?.url || './assets/red-sofa.avif';
   if (heroShareImg) {
     const ogImg = document.querySelector('meta[property="og:image"]');
     if (ogImg) ogImg.setAttribute('content', heroShareImg);
