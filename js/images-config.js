@@ -13,56 +13,56 @@ window.DEFAULT_SITE_IMAGES = {
   "hero-slide-1": {
     category: "Hero Slider",
     label: "Slide 1: Red Velvet Living Lounge",
-    url: "./assets/real-red-sofa-living.svg"
+    url: "./assets/red-sofa.avif"
   },
   "hero-slide-2": {
     category: "Hero Slider",
     label: "Slide 2: Olive Green Velvet Lounge",
-    url: "./assets/real-green-sofa-living.svg"
+    url: "./assets/green-sofa.avif"
   },
   "hero-slide-3": {
     category: "Hero Slider",
     label: "Slide 3: Classic Teak Floral Lounge",
-    url: "./assets/real-floral-sofa-living.svg"
+    url: "./assets/brown-sofa.avif"
   },
   "hero-slide-4": {
     category: "Hero Slider",
     label: "Slide 4: Master Suite Bedroom",
-    url: "./assets/real-master-bedroom.svg"
+    url: "./assets/master-bedrom.avif"
   },
 
   // About Section Images
   "about-primary": {
     category: "About Section",
     label: "Main Living Area Photo",
-    url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80"
+    url: "./assets/red-sofa.avif"
   },
   "about-secondary": {
     category: "About Section",
     label: "Cozy Guest Bedroom Photo",
-    url: "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=800&q=80"
+    url: "./assets/second-bedroom.avif"
   },
 
   // Gallery Photos
   "gallery-1": {
     category: "Photo Gallery",
     label: "Living Room 1 - Red Velvet Sofa",
-    url: "./assets/real-red-sofa-living.svg"
+    url: "./assets/red-sofa.avif"
   },
   "gallery-2": {
     category: "Photo Gallery",
     label: "Living Room 2 - Olive Green Velvet",
-    url: "./assets/real-green-sofa-living.svg"
+    url: "./assets/green-sofa.avif"
   },
   "gallery-3": {
     category: "Photo Gallery",
     label: "Living Room 3 - Teak Floral Sofa",
-    url: "./assets/real-floral-sofa-living.svg"
+    url: "./assets/brown-sofa.avif"
   },
   "gallery-4": {
     category: "Photo Gallery",
     label: "Bedroom 1 - Master Suite Bed",
-    url: "./assets/real-master-bedroom.svg"
+    url: "./assets/master-bedrom.avif"
   },
   "gallery-5": {
     category: "Photo Gallery",
@@ -72,17 +72,17 @@ window.DEFAULT_SITE_IMAGES = {
   "gallery-6": {
     category: "Photo Gallery",
     label: "Bedroom 2 - Executive Guest Room",
-    url: "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=800&q=80"
+    url: "./assets/second-bedroom.avif"
   },
   "gallery-7": {
     category: "Photo Gallery",
     label: "Washroom - Clean Modern Bathroom",
-    url: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80"
+    url: "./assets/washroom.avif"
   },
   "gallery-8": {
     category: "Photo Gallery",
     label: "Dining - Dining Table Setup",
-    url: "https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=800&q=80"
+    url: "./assets/dining-table.avif"
   }
 };
 
@@ -220,7 +220,7 @@ function applySiteImages() {
       // Add fallback error handler if image fails to load
       img.onerror = function() {
         this.onerror = null;
-        this.src = './assets/real-red-sofa-living.svg';
+        this.src = './assets/red-sofa.avif';
       };
 
       // If wrapped in a gallery lightbox anchor, update lightbox link target as well
