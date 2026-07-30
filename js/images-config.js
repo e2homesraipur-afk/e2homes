@@ -67,7 +67,7 @@ window.DEFAULT_SITE_IMAGES = {
   "gallery-5": {
     category: "Photo Gallery",
     label: "Kitchen - Modular Kitchen Setup",
-    url: "./assets/real-kitchen-dining.svg"
+    url: "./assets/dining-table.avif"
   },
   "gallery-6": {
     category: "Photo Gallery",
@@ -151,8 +151,8 @@ function getActiveSiteImages() {
   Object.keys(customMap).forEach(key => {
     const customVal = customMap[key];
     const urlStr = typeof customVal === 'string' ? customVal : (customVal && customVal.url ? customVal.url : '');
-    // Remove empty or broken custom image overrides
-    if (!urlStr || urlStr === './assets/red-sofa.avif') {
+    // Remove empty, missing .avif, or old .svg overrides
+    if (!urlStr || urlStr.includes('.avif') || urlStr.includes('.svg')) {
       delete customMap[key];
       customChanged = true;
     }
@@ -221,20 +221,20 @@ function applySiteImages() {
   const imagesMap = getActiveSiteImages();
   
   const FALLBACK_MAP = {
-    'hero-slide-1': './assets/real-red-sofa-living.svg',
-    'hero-slide-2': './assets/real-green-sofa-living.svg',
-    'hero-slide-3': './assets/real-floral-sofa-living.svg',
-    'hero-slide-4': './assets/real-master-bedroom.svg',
-    'about-primary': './assets/real-red-sofa-living.svg',
-    'about-secondary': './assets/real-master-bedroom.svg',
-    'gallery-1': './assets/real-red-sofa-living.svg',
-    'gallery-2': './assets/real-green-sofa-living.svg',
-    'gallery-3': './assets/real-floral-sofa-living.svg',
-    'gallery-4': './assets/real-master-bedroom.svg',
-    'gallery-5': './assets/real-kitchen-dining.svg',
-    'gallery-6': './assets/real-master-bedroom.svg',
-    'gallery-7': './assets/real-kitchen-dining.svg',
-    'gallery-8': './assets/real-kitchen-dining.svg'
+    'hero-slide-1': 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80',
+    'hero-slide-2': 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80',
+    'hero-slide-3': 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80',
+    'hero-slide-4': 'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1200&q=80',
+    'about-primary': 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80',
+    'about-secondary': 'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=1200&q=80',
+    'gallery-1': 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80',
+    'gallery-2': 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80',
+    'gallery-3': 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80',
+    'gallery-4': 'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1200&q=80',
+    'gallery-5': 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1200&q=80',
+    'gallery-6': 'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=1200&q=80',
+    'gallery-7': 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80',
+    'gallery-8': 'https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=1200&q=80'
   };
 
   Object.keys(imagesMap).forEach(key => {
