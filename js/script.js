@@ -1729,7 +1729,7 @@ function renderSiteSuites() {
     if (keyToUse === 'bedroom') keyToUse = 'gallery-2';
     if (keyToUse === 'masterBedroom') keyToUse = 'gallery-3';
 
-    let imgSrc = suite.imgUrl || siteImages[keyToUse]?.url || siteImages['gallery-1']?.url || './assets/real-red-sofa-living.svg';
+    let imgSrc = suite.imgUrl || siteImages[keyToUse]?.url || siteImages['gallery-1']?.url || './assets/red-sofa.avif';
     if (imgSrc && imgSrc.startsWith('/assets/')) imgSrc = '.' + imgSrc;
 
     const isFeatured = suite.badgeType === 'featured';
@@ -1753,7 +1753,7 @@ function renderSiteSuites() {
         </span>
       </div>
       <div class="apt-image-box">
-        <img src="${imgSrc}" data-img-key="${keyToUse}" alt="${suite.title} - E2 Homes" class="apt-img" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='./assets/real-red-sofa-living.svg';">
+        <img src="${imgSrc}" data-img-key="${keyToUse}" alt="${suite.title} - E2 Homes" class="apt-img" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='./assets/red-sofa.avif';">
       </div>
       <div class="apt-body">
         <h3>${suite.title}</h3>
