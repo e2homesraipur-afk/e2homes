@@ -1234,16 +1234,28 @@ function initImageManager() {
   // Export updated js/images-config.js file content
   exportBtn?.addEventListener('click', () => {
     const images = typeof getActiveSiteImages === 'function' ? getActiveSiteImages() : {};
-    let jsCode = `/**\n * E2 HOMES RAIPUR - CUSTOMIZED SITE IMAGE CONFIGURATION\n * Update this file when hosting your website!\n */\n\nwindow.DEFAULT_SITE_IMAGES = {\n`;
+    const info = typeof getSiteInfo === 'function' ? getSiteInfo() : {};
+    const suites = typeof getSuites === 'function' ? getSuites() : [];
+
+    let jsCode = `/**
+ * E2 HOMES RAIPUR - PERMANENT SITE CONFIGURATION
+ * Commit this file to your repository at /js/images-config.js to make changes live on GitHub Pages across all devices!
+ */
+
+window.DEFAULT_SITE_IMAGES = {\n`;
 
     const keys = Object.keys(images);
     keys.forEach((key, idx) => {
       const item = images[key];
       const isLast = idx === keys.length - 1;
-      jsCode += `  "${key}": {\n    category: "${item.category}",\n    label: "${item.label}",\n    url: "${item.url}"\n  }${isLast ? '' : ','}\n`;
+      jsCode += `  "${key}": {\n    category: "${item.category || 'Photos'}",\n    label: "${item.label || key}",\n    url: "${item.url || ''}"\n  }${isLast ? '' : ','}\n`;
     });
 
-    jsCode += `};\n`;
+    jsCode += `};\n\n`;
+
+    jsCode += `window.DEFAULT_SITE_INFO = ${JSON.stringify(info, null, 2)};\n\n`;
+
+    jsCode += `if (typeof window !== 'undefined') {\n  window.DEFAULT_SUITES = ${JSON.stringify(suites, null, 2)};\n}\n`;
 
     // Prompt user to download updated file
     const blob = new Blob([jsCode], { type: 'text/javascript' });
@@ -1253,7 +1265,7 @@ function initImageManager() {
     a.download = 'images-config.js';
     a.click();
     URL.revokeObjectURL(url);
-    showToast('Downloaded images-config.js! Replace js/images-config.js when hosting.', 'success');
+    showToast('Downloaded images-config.js! Replace js/images-config.js in your GitHub repository to update live for all visitors.', 'success');
   });
 }
 

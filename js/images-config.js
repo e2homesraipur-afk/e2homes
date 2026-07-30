@@ -237,6 +237,15 @@ function applySiteImages() {
       if (item.label) el.textContent = item.label;
     });
   });
+
+  // Dynamically update social share meta tags (Open Graph & Twitter card)
+  const heroShareImg = imagesMap['hero']?.url || imagesMap['gallery-1']?.url || 'assets/real-red-sofa-living.svg';
+  if (heroShareImg) {
+    const ogImg = document.querySelector('meta[property="og:image"]');
+    if (ogImg) ogImg.setAttribute('content', heroShareImg);
+    const twImg = document.querySelector('meta[name="twitter:image"]');
+    if (twImg) twImg.setAttribute('content', heroShareImg);
+  }
 }
 
 // Auto apply images and property info as soon as DOM is ready
