@@ -325,7 +325,6 @@ function initContactForm() {
 *Phone:* ${phone}
 *Check-in Date:* ${checkin}
 *Check-out Date:* ${checkout}
-*Guests:* ${guests || '1'}
 *Reason for Stay:* ${reason || 'General Stay'}
 *Notes/Message:* ${message || 'None'}
 ----------------------------------
@@ -706,8 +705,8 @@ function initImageManager() {
 
         // Helper: Compress & Downscale Uploaded Images to fit in localStorage
         const compressAndConvertImage = (file, callback) => {
-          const maxWidth = 1200;
-          const maxHeight = 1200;
+          const maxWidth = 800;
+          const maxHeight = 800;
           const reader = new FileReader();
 
           reader.onload = function(evt) {
@@ -732,7 +731,7 @@ function initImageManager() {
               const ctx = canvas.getContext('2d');
               ctx.drawImage(img, 0, 0, width, height);
 
-              const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.82);
+              const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.70);
               callback(compressedDataUrl);
             };
 
@@ -1065,6 +1064,8 @@ function initImageManager() {
 
   // Save changes to LocalStorage and apply
   saveBtn?.addEventListener('click', () => {
+    let hasQuotaError = false;
+
     // 1. Photo Custom Labels & URLs
     const customMap = {};
     const cards = container.querySelectorAll('.img-mgr-card');
@@ -1075,7 +1076,12 @@ function initImageManager() {
         const key = labelInput.getAttribute('data-key');
         const label = labelInput.value.trim();
         let url = urlInput.value.trim();
-        if (url.startsWith('/assets/')) url = '.' + url;
+        
+        if (typeof sanitizeImageUrl === 'function') {
+          url = sanitizeImageUrl(url);
+        } else if (url.startsWith('/assets/')) {
+          url = '.' + url;
+        }
 
         if (key && (label || url)) {
           customMap[key] = { label, url };
@@ -1087,6 +1093,7 @@ function initImageManager() {
       localStorage.setItem('E2_CUSTOM_SITE_IMAGES', JSON.stringify(customMap));
     } catch (e) {
       console.warn('LocalStorage quota limit reached:', e);
+      hasQuotaError = true;
     }
 
     // 2. Suites & Bedrooms Customization
@@ -1104,7 +1111,10 @@ function initImageManager() {
       const features = featStr ? featStr.split(',').map(s => s.trim()).filter(Boolean) : [];
 
       const imgKey = card.querySelector('.suite-imgkey-select')?.value || ('gallery-' + ((idx % 8) + 1));
-      const imgUrl = card.querySelector('.suite-imgurl-inp')?.value.trim() || '';
+      let imgUrl = card.querySelector('.suite-imgurl-inp')?.value.trim() || '';
+      if (typeof sanitizeImageUrl === 'function') {
+        imgUrl = sanitizeImageUrl(imgUrl);
+      }
 
       updatedSuites.push({
         id: card.getAttribute('data-suite-id') || 'suite_' + idx,
@@ -1122,8 +1132,11 @@ function initImageManager() {
       });
     });
 
-    localStorage.setItem('E2_CUSTOM_SUITES', JSON.stringify(updatedSuites));
-    renderSiteSuites();
+    try {
+      localStorage.setItem('E2_CUSTOM_SUITES', JSON.stringify(updatedSuites));
+    } catch (e) {
+      hasQuotaError = true;
+    }
 
     // 3. Property Settings Info
     const propNameVal = modal.querySelector('#cfg-property-name')?.value.trim() || 'E2 Homes Raipur';
@@ -1139,7 +1152,13 @@ function initImageManager() {
       phone: phoneVal,
       whatsapp: whatsappVal
     };
-    localStorage.setItem('E2_CUSTOM_SITE_INFO', JSON.stringify(updatedSiteInfo));
+    
+    try {
+      localStorage.setItem('E2_CUSTOM_SITE_INFO', JSON.stringify(updatedSiteInfo));
+    } catch (e) {
+      hasQuotaError = true;
+    }
+
     if (typeof applySiteInfo === 'function') {
       applySiteInfo();
     }
@@ -1165,7 +1184,13 @@ function initImageManager() {
       });
     });
 
-    localStorage.setItem('E2_GUEST_REVIEWS_ALL', JSON.stringify(updatedReviews));
+    try {
+      localStorage.setItem('E2_GUEST_REVIEWS_ALL', JSON.stringify(updatedReviews));
+    } catch (e) {
+      hasQuotaError = true;
+    }
+
+    renderSiteSuites();
 
     if (typeof applySiteImages === 'function') {
       applySiteImages();
@@ -1175,7 +1200,11 @@ function initImageManager() {
       window.refreshReviewsCarousel();
     }
 
-    showToast('All custom bedrooms, suites, photos, property details & guest reviews saved successfully!', 'success');
+    if (hasQuotaError) {
+      showToast('Storage limit reached! Please use image URLs (Google Drive / Unsplash) instead of large uploaded photos.', 'error');
+    } else {
+      showToast('All custom bedrooms, suites, photos, property details & guest reviews saved successfully!', 'success');
+    }
     closeImageModal();
   });
 
@@ -1710,7 +1739,6 @@ function renderSiteSuites() {
         <span class="apt-badge ${isFeatured ? 'badge-popular' : ''}">
           <i class="fa-solid ${isFeatured ? 'fa-fire' : 'fa-house'}"></i> ${suite.badge || suite.title}
         </span>
-        <span class="apt-capacity"><i class="fa-solid fa-user-group"></i> ${suite.guests || '1 - 4 Guests'}</span>
       </div>
       <div class="apt-image-box">
         <img src="${imgSrc}" data-img-key="${keyToUse}" alt="${suite.title} - E2 Homes" class="apt-img" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='./assets/real-red-sofa-living.svg';">

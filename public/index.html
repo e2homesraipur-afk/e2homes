@@ -21,9 +21,15 @@
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
 
-  <!-- Google Fonts: Playfair Display & Inter -->
+  <!-- Performance Preconnects & DNS Prefetching for CDN & Google Fonts -->
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+  <link rel="dns-prefetch" href="https://images.unsplash.com">
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://images.unsplash.com">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600;1,700&display=swap" rel="stylesheet">
 
   <!-- Font Awesome Icons -->
@@ -130,19 +136,19 @@
     <div class="hero-slider">
       <!-- Slide 1: Real Red Velvet Living Room -->
       <div class="slide active">
-        <img src="./assets/real-red-sofa-living.svg" data-img-key="hero-slide-1" alt="E2 Homes Raipur Real Red Velvet Living Room" class="slide-bg" referrerpolicy="no-referrer">
+        <img src="./assets/real-red-sofa-living.svg" data-img-key="hero-slide-1" alt="E2 Homes Raipur Real Red Velvet Living Room" class="slide-bg" fetchpriority="high" referrerpolicy="no-referrer">
       </div>
       <!-- Slide 2: Real Olive Green Sofa Living Lounge -->
       <div class="slide">
-        <img src="./assets/real-green-sofa-living.svg" data-img-key="hero-slide-2" alt="E2 Homes Executive Olive Green Velvet Lounge" class="slide-bg" referrerpolicy="no-referrer">
+        <img src="./assets/real-green-sofa-living.svg" data-img-key="hero-slide-2" alt="E2 Homes Executive Olive Green Velvet Lounge" class="slide-bg" loading="lazy" decoding="async" referrerpolicy="no-referrer">
       </div>
       <!-- Slide 3: Real Floral Wooden Sofa Living Lounge -->
       <div class="slide">
-        <img src="./assets/real-floral-sofa-living.svg" data-img-key="hero-slide-3" alt="E2 Homes Classic Teak Floral Lounge" class="slide-bg" referrerpolicy="no-referrer">
+        <img src="./assets/real-floral-sofa-living.svg" data-img-key="hero-slide-3" alt="E2 Homes Classic Teak Floral Lounge" class="slide-bg" loading="lazy" decoding="async" referrerpolicy="no-referrer">
       </div>
       <!-- Slide 4: Real Master Bedroom Suite -->
       <div class="slide">
-        <img src="./assets/real-master-bedroom.svg" data-img-key="hero-slide-4" alt="E2 Homes Master Suite Bedroom" class="slide-bg" referrerpolicy="no-referrer">
+        <img src="./assets/real-master-bedroom.svg" data-img-key="hero-slide-4" alt="E2 Homes Master Suite Bedroom" class="slide-bg" loading="lazy" decoding="async" referrerpolicy="no-referrer">
       </div>
     </div>
 
@@ -260,8 +266,8 @@
         
         <!-- Image Stack -->
         <div class="about-image-wrapper animate-on-scroll">
-          <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80" data-img-key="about-primary" alt="E2 Homes Luxury Living Area" class="about-img-primary" referrerpolicy="no-referrer">
-          <img src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=800&q=80" data-img-key="about-secondary" alt="E2 Homes Cozy Bedroom" class="about-img-secondary" referrerpolicy="no-referrer">
+          <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80" data-img-key="about-primary" alt="E2 Homes Luxury Living Area" class="about-img-primary" loading="lazy" decoding="async" referrerpolicy="no-referrer">
+          <img src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=800&q=80" data-img-key="about-secondary" alt="E2 Homes Cozy Bedroom" class="about-img-secondary" loading="lazy" decoding="async" referrerpolicy="no-referrer">
           
           <div class="about-experience-badge">
             <div class="num">100%</div>
@@ -444,10 +450,9 @@
         <div class="apartment-card animate-on-scroll">
           <div class="apt-header">
             <span class="apt-badge"><i class="fa-solid fa-house"></i> 1 BHK Executive</span>
-            <span class="apt-capacity"><i class="fa-solid fa-user-group"></i> 1 - 3 Guests</span>
           </div>
           <div class="apt-image-box">
-            <img src="./assets/real-red-sofa-living.svg" data-img-key="gallery-1" alt="1 BHK Executive Apartment - E2 Homes" class="apt-img" referrerpolicy="no-referrer">
+            <img src="./assets/real-red-sofa-living.svg" data-img-key="gallery-1" alt="1 BHK Executive Apartment - E2 Homes" class="apt-img" loading="lazy" decoding="async" referrerpolicy="no-referrer">
           </div>
           <div class="apt-body">
             <h3>1 BHK Luxury Executive Suite</h3>
@@ -475,10 +480,9 @@
         <div class="apartment-card apt-featured animate-on-scroll delay-100">
           <div class="apt-header">
             <span class="apt-badge badge-popular"><i class="fa-solid fa-fire"></i> Most Popular • 2 BHK Suite</span>
-            <span class="apt-capacity"><i class="fa-solid fa-user-group"></i> 4 - 6 Guests</span>
           </div>
           <div class="apt-image-box">
-            <img src="./assets/real-green-sofa-living.svg" data-img-key="gallery-2" alt="2 BHK Deluxe Family Suite - E2 Homes" class="apt-img" referrerpolicy="no-referrer">
+            <img src="./assets/real-green-sofa-living.svg" data-img-key="gallery-2" alt="2 BHK Deluxe Family Suite - E2 Homes" class="apt-img" loading="lazy" decoding="async" referrerpolicy="no-referrer">
           </div>
           <div class="apt-body">
             <h3>2 BHK Deluxe Family Suite</h3>
@@ -506,10 +510,9 @@
         <div class="apartment-card animate-on-scroll delay-200">
           <div class="apt-header">
             <span class="apt-badge"><i class="fa-solid fa-building-user"></i> 3 BHK Royal Grand</span>
-            <span class="apt-capacity"><i class="fa-solid fa-user-group"></i> 6 - 10 Guests</span>
           </div>
           <div class="apt-image-box">
-            <img src="./assets/real-floral-sofa-living.svg" data-img-key="gallery-3" alt="3 BHK Royal Grand Suite - E2 Homes" class="apt-img" referrerpolicy="no-referrer">
+            <img src="./assets/real-floral-sofa-living.svg" data-img-key="gallery-3" alt="3 BHK Royal Grand Suite - E2 Homes" class="apt-img" loading="lazy" decoding="async" referrerpolicy="no-referrer">
           </div>
           <div class="apt-body">
             <h3>3 BHK Royal Grand Residence</h3>
@@ -659,7 +662,7 @@
         
         <!-- Item 1: Real Red Sofa Living Room -->
         <div class="gallery-item animate-on-scroll" data-category="living">
-          <img src="./assets/real-red-sofa-living.svg" data-img-key="gallery-1" alt="Real Red Velvet Living Room - E2 Homes" class="gallery-img" referrerpolicy="no-referrer">
+          <img src="./assets/real-red-sofa-living.svg" data-img-key="gallery-1" alt="Real Red Velvet Living Room - E2 Homes" class="gallery-img" loading="lazy" decoding="async" referrerpolicy="no-referrer">
           <div class="gallery-overlay">
             <span class="gallery-category-tag">Living Area (Real Photo)</span>
             <h4 class="gallery-caption" data-label-key="gallery-1">Living Room 1 - Red Velvet Sofa</h4>
@@ -669,7 +672,7 @@
 
         <!-- Item 2: Real Olive Green Sofa Living Room -->
         <div class="gallery-item animate-on-scroll delay-100" data-category="living">
-          <img src="./assets/real-green-sofa-living.svg" data-img-key="gallery-2" alt="Real Olive Green Velvet Living Room - E2 Homes" class="gallery-img" referrerpolicy="no-referrer">
+          <img src="./assets/real-green-sofa-living.svg" data-img-key="gallery-2" alt="Real Olive Green Velvet Living Room - E2 Homes" class="gallery-img" loading="lazy" decoding="async" referrerpolicy="no-referrer">
           <div class="gallery-overlay">
             <span class="gallery-category-tag">Living Area (Real Photo)</span>
             <h4 class="gallery-caption" data-label-key="gallery-2">Living Room 2 - Olive Green Velvet</h4>
@@ -679,7 +682,7 @@
 
         <!-- Item 3: Real Floral Wooden Sofa Living Room -->
         <div class="gallery-item animate-on-scroll delay-200" data-category="living">
-          <img src="./assets/real-floral-sofa-living.svg" data-img-key="gallery-3" alt="Real Classic Floral Teak Sofa Living Room - E2 Homes" class="gallery-img" referrerpolicy="no-referrer">
+          <img src="./assets/real-floral-sofa-living.svg" data-img-key="gallery-3" alt="Real Classic Floral Teak Sofa Living Room - E2 Homes" class="gallery-img" loading="lazy" decoding="async" referrerpolicy="no-referrer">
           <div class="gallery-overlay">
             <span class="gallery-category-tag">Living Area (Real Photo)</span>
             <h4 class="gallery-caption" data-label-key="gallery-3">Living Room 3 - Teak Floral Sofa</h4>
@@ -689,7 +692,7 @@
 
         <!-- Item 4: Real Master Bedroom Suite -->
         <div class="gallery-item animate-on-scroll delay-300" data-category="bedrooms">
-          <img src="./assets/real-master-bedroom.svg" data-img-key="gallery-4" alt="Master Suite Bedroom - E2 Homes" class="gallery-img" referrerpolicy="no-referrer">
+          <img src="./assets/real-master-bedroom.svg" data-img-key="gallery-4" alt="Master Suite Bedroom - E2 Homes" class="gallery-img" loading="lazy" decoding="async" referrerpolicy="no-referrer">
           <div class="gallery-overlay">
             <span class="gallery-category-tag">Bedrooms</span>
             <h4 class="gallery-caption" data-label-key="gallery-4">Bedroom 1 - Master Suite Bed</h4>
@@ -699,7 +702,7 @@
 
         <!-- Item 5: Real Kitchen Setup -->
         <div class="gallery-item animate-on-scroll" data-category="kitchen">
-          <img src="./assets/real-kitchen-dining.svg" data-img-key="gallery-5" alt="Fully Equipped Kitchen - E2 Homes" class="gallery-img" referrerpolicy="no-referrer">
+          <img src="./assets/real-kitchen-dining.svg" data-img-key="gallery-5" alt="Fully Equipped Kitchen - E2 Homes" class="gallery-img" loading="lazy" decoding="async" referrerpolicy="no-referrer">
           <div class="gallery-overlay">
             <span class="gallery-category-tag">Kitchen & Dining</span>
             <h4 class="gallery-caption" data-label-key="gallery-5">Kitchen - Modular Kitchen Setup</h4>
@@ -709,7 +712,7 @@
 
         <!-- Item 6: Executive Deluxe Bedroom -->
         <div class="gallery-item animate-on-scroll delay-100" data-category="bedrooms">
-          <img src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=800&q=80" data-img-key="gallery-6" alt="Executive Deluxe Guest Bedroom" class="gallery-img" referrerpolicy="no-referrer">
+          <img src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=800&q=80" data-img-key="gallery-6" alt="Executive Deluxe Guest Bedroom" class="gallery-img" loading="lazy" decoding="async" referrerpolicy="no-referrer">
           <div class="gallery-overlay">
             <span class="gallery-category-tag">Bedrooms</span>
             <h4 class="gallery-caption" data-label-key="gallery-6">Bedroom 2 - Executive Guest Room</h4>
@@ -719,7 +722,7 @@
 
         <!-- Item 7: Pristine Washroom -->
         <div class="gallery-item animate-on-scroll delay-200" data-category="bathrooms">
-          <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80" data-img-key="gallery-7" alt="Clean Modern Washroom" class="gallery-img" referrerpolicy="no-referrer">
+          <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80" data-img-key="gallery-7" alt="Clean Modern Washroom" class="gallery-img" loading="lazy" decoding="async" referrerpolicy="no-referrer">
           <div class="gallery-overlay">
             <span class="gallery-category-tag">Washrooms</span>
             <h4 class="gallery-caption" data-label-key="gallery-7">Washroom - Clean Modern Bathroom</h4>
@@ -729,7 +732,7 @@
 
         <!-- Item 8: Dining Corner -->
         <div class="gallery-item animate-on-scroll delay-300" data-category="kitchen">
-          <img src="https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=800&q=80" data-img-key="gallery-8" alt="Dining Table Setup" class="gallery-img" referrerpolicy="no-referrer">
+          <img src="https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=800&q=80" data-img-key="gallery-8" alt="Dining Table Setup" class="gallery-img" loading="lazy" decoding="async" referrerpolicy="no-referrer">
           <div class="gallery-overlay">
             <span class="gallery-category-tag">Kitchen & Dining</span>
             <h4 class="gallery-caption" data-label-key="gallery-8">Dining - Dining Table Setup</h4>
@@ -903,19 +906,34 @@
           <i class="fa-solid fa-compass"></i> Explore & Dine in Raipur
         </span>
         <h2 class="section-title heading-accent">
-          Local Places to Visit & Top-Rated Restaurants
+          Local Places to Visit & Top-Rated Dining
         </h2>
         <p class="section-subtitle">
-          Handpicked top attraction spots and the finest Veg, Non-Veg, North Indian, and South Indian dining destinations near E2 Homes, Kamal Vihar.
+          Curated sights, serene gardens, shopping hubs, and top-rated Veg, Non-Veg, and South Indian dining spots near E2 Homes, Kamal Vihar.
         </p>
+
+        <!-- Concierge Hero Feature Banner -->
+        <div class="guide-concierge-banner animate-on-scroll">
+          <div class="guide-concierge-content">
+            <div class="guide-concierge-badge">
+              <i class="fa-solid fa-star" style="color: var(--color-gold);"></i> E2 Homes Concierge Recommendation
+            </div>
+            <h3>Raipur Local Insider Guide for Guests</h3>
+            <p>Everything you need for a comfortable stay: top attractions and best food spots curated for you.</p>
+            <div class="guide-concierge-stats">
+              <div class="g-stat"><i class="fa-solid fa-location-dot"></i> 15+ Curated Spots</div>
+              <div class="g-stat"><i class="fa-solid fa-headset"></i> 24x7 Host & Cab Assistance</div>
+            </div>
+          </div>
+        </div>
 
         <!-- Category Filters -->
         <div class="guide-filter-tabs">
-          <button class="guide-tab active" data-guide-cat="all">All Recommendations</button>
-          <button class="guide-tab" data-guide-cat="places"><i class="fa-solid fa-landmark"></i> Places to Visit</button>
-          <button class="guide-tab" data-guide-cat="veg-north"><i class="fa-solid fa-leaf"></i> Veg (North & South)</button>
-          <button class="guide-tab" data-guide-cat="nonveg"><i class="fa-solid fa-drumstick-bite"></i> Non-Veg & Mughlai</button>
-          <button class="guide-tab" data-guide-cat="south"><i class="fa-solid fa-mug-hot"></i> South Indian</button>
+          <button class="guide-tab active" data-guide-cat="all"><i class="fa-solid fa-border-all"></i> All Recommendations</button>
+          <button class="guide-tab" data-guide-cat="places"><i class="fa-solid fa-landmark"></i> Sightseeing & Parks</button>
+          <button class="guide-tab" data-guide-cat="veg-north"><i class="fa-solid fa-leaf"></i> Pure Veg & Thali</button>
+          <button class="guide-tab" data-guide-cat="nonveg"><i class="fa-solid fa-drumstick-bite"></i> Non-Veg & Biryani</button>
+          <button class="guide-tab" data-guide-cat="south"><i class="fa-solid fa-mug-hot"></i> South Indian Classics</button>
         </div>
       </div>
 
@@ -928,7 +946,6 @@
           <div class="guide-card-content">
             <div class="guide-card-header">
               <h3>Swami Vivekananda Sarovar (Telibandha Lake)</h3>
-              <span class="guide-distance"><i class="fa-solid fa-car"></i> ~15 mins</span>
             </div>
             <p class="guide-cuisine"><i class="fa-solid fa-location-dot"></i> Marine Drive, Raipur</p>
             <p class="guide-desc">
@@ -948,7 +965,6 @@
           <div class="guide-card-content">
             <div class="guide-card-header">
               <h3>Purkhouti Muktangan</h3>
-              <span class="guide-distance"><i class="fa-solid fa-car"></i> ~12 mins</span>
             </div>
             <p class="guide-cuisine"><i class="fa-solid fa-location-dot"></i> Naya Raipur Road</p>
             <p class="guide-desc">
@@ -968,7 +984,6 @@
           <div class="guide-card-content">
             <div class="guide-card-header">
               <h3>Magneto The Mall & City Centre</h3>
-              <span class="guide-distance"><i class="fa-solid fa-car"></i> ~12 mins</span>
             </div>
             <p class="guide-cuisine"><i class="fa-solid fa-location-dot"></i> GE Road, Labhandi</p>
             <p class="guide-desc">
@@ -988,7 +1003,6 @@
           <div class="guide-card-content">
             <div class="guide-card-header">
               <h3>Energy Park (Urja Park)</h3>
-              <span class="guide-distance"><i class="fa-solid fa-car"></i> ~10 mins</span>
             </div>
             <p class="guide-cuisine"><i class="fa-solid fa-location-dot"></i> Mana Road, Raipur</p>
             <p class="guide-desc">
@@ -1008,7 +1022,6 @@
           <div class="guide-card-content">
             <div class="guide-card-header">
               <h3>Manju Mamta & Sukhsagar</h3>
-              <span class="guide-distance"><i class="fa-solid fa-utensils"></i> ~10 mins</span>
             </div>
             <p class="guide-cuisine"><i class="fa-solid fa-fire"></i> <strong>Cuisine:</strong> North Indian & South Indian Classics</p>
             <p class="guide-desc">
@@ -1028,7 +1041,6 @@
           <div class="guide-card-content">
             <div class="guide-card-header">
               <h3>Anna South Indian Restaurant</h3>
-              <span class="guide-distance"><i class="fa-solid fa-utensils"></i> ~10 mins</span>
             </div>
             <p class="guide-cuisine"><i class="fa-solid fa-fire"></i> <strong>Cuisine:</strong> Authentic South Indian Specialties</p>
             <p class="guide-desc">
@@ -1048,7 +1060,6 @@
           <div class="guide-card-content">
             <div class="guide-card-header">
               <h3>Ashoka Biryani</h3>
-              <span class="guide-distance"><i class="fa-solid fa-utensils"></i> ~10 mins</span>
             </div>
             <p class="guide-cuisine"><i class="fa-solid fa-fire"></i> <strong>Cuisine:</strong> Authentic Dum Biryani & Mughlai Non-Veg</p>
             <p class="guide-desc">
@@ -1068,7 +1079,6 @@
           <div class="guide-card-content">
             <div class="guide-card-header">
               <h3>Desi Thaat Village Restaurant</h3>
-              <span class="guide-distance"><i class="fa-solid fa-utensils"></i> ~10 mins</span>
             </div>
             <p class="guide-cuisine"><i class="fa-solid fa-fire"></i> <strong>Cuisine:</strong> Authentic Desi North Indian & Village Dhaba</p>
             <p class="guide-desc">
@@ -1088,7 +1098,6 @@
           <div class="guide-card-content">
             <div class="guide-card-header">
               <h3>Kake Di Hatti (King of Naans)</h3>
-              <span class="guide-distance"><i class="fa-solid fa-utensils"></i> ~12 mins</span>
             </div>
             <p class="guide-cuisine"><i class="fa-solid fa-fire"></i> <strong>Cuisine:</strong> Authentic Punjabi & Stuffed Naan Legend</p>
             <p class="guide-desc">
@@ -1108,7 +1117,6 @@
           <div class="guide-card-content">
             <div class="guide-card-header">
               <h3>Chai Leela Cafe</h3>
-              <span class="guide-distance"><i class="fa-solid fa-utensils"></i> ~8 mins</span>
             </div>
             <p class="guide-cuisine"><i class="fa-solid fa-fire"></i> <strong>Cuisine:</strong> Special Kulhad Chai, Cafe Snacks & Fast Food</p>
             <p class="guide-desc">
@@ -1128,7 +1136,6 @@
           <div class="guide-card-content">
             <div class="guide-card-header">
               <h3>Indian Coffee House (ICH)</h3>
-              <span class="guide-distance"><i class="fa-solid fa-utensils"></i> ~10 mins</span>
             </div>
             <p class="guide-cuisine"><i class="fa-solid fa-fire"></i> <strong>Cuisine:</strong> South Indian, Omelettes & Quick Bites</p>
             <p class="guide-desc">
@@ -1148,7 +1155,6 @@
           <div class="guide-card-content">
             <div class="guide-card-header">
               <h3>Suruchi Thali & Agrawal Sweets</h3>
-              <span class="guide-distance"><i class="fa-solid fa-utensils"></i> ~12 mins</span>
             </div>
             <p class="guide-cuisine"><i class="fa-solid fa-fire"></i> <strong>Cuisine:</strong> Authentic Gujarati & Rajasthani Thali</p>
             <p class="guide-desc">
@@ -1168,7 +1174,6 @@
           <div class="guide-card-content">
             <div class="guide-card-header">
               <h3>Nandan Van Jungle Safari (Naya Raipur)</h3>
-              <span class="guide-distance"><i class="fa-solid fa-car"></i> ~15 mins</span>
             </div>
             <p class="guide-cuisine"><i class="fa-solid fa-location-dot"></i> Naya Raipur Sector 39</p>
             <p class="guide-desc">
@@ -1188,7 +1193,6 @@
           <div class="guide-card-content">
             <div class="guide-card-header">
               <h3>Mahant Ghasidas Memorial Museum</h3>
-              <span class="guide-distance"><i class="fa-solid fa-car"></i> ~18 mins</span>
             </div>
             <p class="guide-cuisine"><i class="fa-solid fa-location-dot"></i> Near Raj Bhavan, Raipur</p>
             <p class="guide-desc">
@@ -1208,7 +1212,6 @@
           <div class="guide-card-content">
             <div class="guide-card-header">
               <h3>ISKCON Temple (Sri Sri Radha Rasbihari)</h3>
-              <span class="guide-distance"><i class="fa-solid fa-car"></i> ~10 mins</span>
             </div>
             <p class="guide-cuisine"><i class="fa-solid fa-location-dot"></i> Great Eastern Road, Raipur</p>
             <p class="guide-desc">
@@ -1228,7 +1231,6 @@
           <div class="guide-card-content">
             <div class="guide-card-header">
               <h3>Mocha Raipur & Fine Dining</h3>
-              <span class="guide-distance"><i class="fa-solid fa-utensils"></i> ~12 mins</span>
             </div>
             <p class="guide-cuisine"><i class="fa-solid fa-fire"></i> <strong>Cuisine:</strong> North Indian, Gourmet Continental & Mocktails</p>
             <p class="guide-desc">
@@ -1248,7 +1250,6 @@
           <div class="guide-card-content">
             <div class="guide-card-header">
               <h3>Girnar & Local Street Delicacies</h3>
-              <span class="guide-distance"><i class="fa-solid fa-utensils"></i> ~10 mins</span>
             </div>
             <p class="guide-cuisine"><i class="fa-solid fa-fire"></i> <strong>Cuisine:</strong> Chhattisgarhi Snacks, North Indian & Thalis</p>
             <p class="guide-desc">
@@ -1268,7 +1269,6 @@
           <div class="guide-card-content">
             <div class="guide-card-header">
               <h3>Shri Ram Mandir (VIP Road)</h3>
-              <span class="guide-distance"><i class="fa-solid fa-car"></i> ~10 mins</span>
             </div>
             <p class="guide-cuisine"><i class="fa-solid fa-location-dot"></i> VIP Road, Telibandha, Raipur</p>
             <p class="guide-desc">
@@ -1288,7 +1288,6 @@
           <div class="guide-card-content">
             <div class="guide-card-header">
               <h3>Café Bengaluru</h3>
-              <span class="guide-distance"><i class="fa-solid fa-utensils"></i> ~10 mins</span>
             </div>
             <p class="guide-cuisine"><i class="fa-solid fa-fire"></i> <strong>Cuisine:</strong> Authentic Bengaluru Style South Indian</p>
             <p class="guide-desc">
@@ -1308,7 +1307,6 @@
           <div class="guide-card-content">
             <div class="guide-card-header">
               <h3>Barbeque Nation & Magneto Mall</h3>
-              <span class="guide-distance"><i class="fa-solid fa-utensils"></i> ~12 mins</span>
             </div>
             <p class="guide-cuisine"><i class="fa-solid fa-fire"></i> <strong>Cuisine:</strong> Live Table Grills, North Indian & Multi-Cuisine Buffet</p>
             <p class="guide-desc">
@@ -1322,6 +1320,77 @@
           </div>
         </div>
 
+        <!-- Spot 11: Gadh Kalewa -->
+        <div class="guide-card animate-on-scroll delay-200" data-guide-item="places veg-north">
+          <div class="guide-card-badge badge-veg"><i class="fa-solid fa-leaf"></i> Heritage Culture & Food • 4.8 ★</div>
+          <div class="guide-card-content">
+            <div class="guide-card-header">
+              <h3>Gadh Kalewa (Chhattisgarhi Heritage Food)</h3>
+            </div>
+            <p class="guide-cuisine"><i class="fa-solid fa-utensils"></i> <strong>Cuisine:</strong> Authentic Chhattisgarhi Traditional Delicacies & Snacks</p>
+            <p class="guide-desc">
+              Raipur's iconic open-air cultural restaurant at Mahant Ghasidas Museum premises. Celebrated for traditional Chhattisgarhi delicacies like Chela, Fara, Muthia, Bobra, Arsa, and herbal teas served in a serene village courtyard setting.
+            </p>
+            <div class="guide-tags">
+              <span class="tag-highlight">Chela & Fara</span>
+              <span class="tag-highlight">Chhattisgarhi Heritage Delicacies</span>
+              <span>Ethnic Open-Air Setting</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Spot 12: Six Degree -->
+        <div class="guide-card animate-on-scroll" data-guide-item="nonveg veg-north">
+          <div class="guide-card-badge badge-nonveg"><i class="fa-solid fa-martini-glass-citrus"></i> Premium Lounge & Fine Dining • 4.7 ★</div>
+          <div class="guide-card-content">
+            <div class="guide-card-header">
+              <h3>Six Degree (Restaurant & Lounge)</h3>
+            </div>
+            <p class="guide-cuisine"><i class="fa-solid fa-fire"></i> <strong>Cuisine:</strong> Multi-Cuisine Gourmet, Tandoori & Lounge Fine Dining</p>
+            <p class="guide-desc">
+              One of Raipur's premier high-end lounge destinations featuring sophisticated ambient interiors, music, signature mocktails, cocktails, and exquisite North Indian, Continental & Asian delicacies.
+            </p>
+            <div class="guide-tags">
+              <span class="tag-highlight">Gourmet Tandoori</span>
+              <span class="tag-highlight">Luxury Lounge Vibe</span>
+              <span>Multi-Cuisine</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Spot 13: Omaya Square -->
+        <div class="guide-card animate-on-scroll delay-100" data-guide-item="places nonveg veg-north">
+          <div class="guide-card-badge badge-both"><i class="fa-solid fa-city"></i> Lifestyle & Dining Plaza • 4.6 ★</div>
+          <div class="guide-card-content">
+            <div class="guide-card-header">
+              <h3>Omaya Square (VIP Road)</h3>
+            </div>
+            <p class="guide-cuisine"><i class="fa-solid fa-location-dot"></i> VIP Road, Telibandha, Raipur</p>
+            <p class="guide-desc">
+              A vibrant modern commercial and dining plaza located on VIP Road. Features trendy artisanal cafes, dessert bars, boutique stores, and multi-cuisine family restaurants. Perfect for evening outings.
+            </p>
+            <div class="guide-tags">
+              <span class="tag-highlight">Cafes & Multi-Cuisine</span>
+              <span class="tag-highlight">VIP Road Hub</span>
+              <span>Evening Hangout</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Concierge Assistance Callout Card -->
+      <div class="guide-callout-card animate-on-scroll">
+        <div class="callout-icon-box">
+          <i class="fa-brands fa-whatsapp"></i>
+        </div>
+        <div class="callout-text-box">
+          <h4>Need Cab Booking or Food Delivery Guidance?</h4>
+          <p>Our dedicated host at E2 Homes is available 24/7 to assist with local auto/cab arrangements, food delivery directly to your apartment, or custom sightseeing suggestions.</p>
+        </div>
+        <a href="https://wa.me/919301154606?text=Hi%20E2%20Homes,%20I%20am%20a%20guest%20staying%20with%20you.%20Could%20you%20please%20help%20me%20with%20local%20transport%20and%20food%20recommendations?" target="_blank" rel="noopener" class="btn btn-whatsapp callout-btn">
+          <i class="fa-brands fa-whatsapp"></i> Chat with Host
+        </a>
       </div>
 
     </div>
@@ -1471,7 +1540,7 @@
           </div>
           <div class="faq-content">
             <p>
-              We offer fully furnished <strong>1 BHK Executive Apartments</strong> (ideal for 1-3 guests), <strong>2 BHK Deluxe Family Suites</strong> (ideal for 4-6 guests), and <strong>3 BHK Royal Grand Suites</strong> (ideal for 6-10 guests or group stays) at Empresia Elite near Kamal Vihar. All units feature air-conditioned bedrooms, living lounges, private washrooms, and fully equipped kitchens.
+              We offer fully furnished <strong>1 BHK Executive Apartments</strong>, <strong>2 BHK Deluxe Family Suites</strong>, and <strong>3 BHK Royal Grand Suites</strong> at Empresia Elite near Kamal Vihar. All units feature air-conditioned bedrooms, living lounges, private washrooms, and fully equipped kitchens.
             </p>
           </div>
         </div>
@@ -1924,7 +1993,7 @@
   </div>
 
   <!-- JavaScript Files -->
-  <script src="js/images-config.js"></script>
-  <script src="js/script.js" defer></script>
+  <script type="module" src="js/images-config.js"></script>
+  <script type="module" src="js/script.js"></script>
 </body>
 </html>

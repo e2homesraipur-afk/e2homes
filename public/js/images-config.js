@@ -87,7 +87,53 @@ window.DEFAULT_SITE_IMAGES = {
 };
 
 /**
- * Get current active image mapping (Merging Defaults with LocalStorage Overrides)
+ * Helper to sanitize and format image URLs (e.g. converting Google Drive/Dropbox links)
+ */
+function sanitizeImageUrl(url) {
+  if (!url || typeof url !== 'string') return '';
+  let clean = url.trim();
+  if (!clean) return '';
+
+  // 1. Google Drive Share Links -> Direct CDN Image Links
+  if (clean.includes('drive.google.com')) {
+    let driveId = '';
+    const matchD = clean.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (matchD && matchD[1]) {
+      driveId = matchD[1];
+    } else {
+      const matchId = clean.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+      if (matchId && matchId[1]) {
+        driveId = matchId[1];
+      }
+    }
+    if (driveId) {
+      return `https://lh3.googleusercontent.com/d/${driveId}`;
+    }
+  }
+
+  // 2. Dropbox Links -> Direct Links
+  if (clean.includes('dropbox.com')) {
+    clean = clean.replace('?dl=0', '?raw=1').replace('www.dropbox.com', 'dl.dropboxusercontent.com');
+  }
+
+  // 3. Imgur Page Links -> Direct Image Links
+  if (clean.match(/^https?:\/\/imgur\.com\/([a-zA-Z0-9]+)$/)) {
+    const id = clean.split('/').pop();
+    return `https://i.imgur.com/${id}.jpg`;
+  }
+
+  // 4. Relative Asset Paths
+  if (clean.startsWith('/assets/')) {
+    return '.' + clean;
+  } else if (clean.startsWith('assets/')) {
+    return './' + clean;
+  }
+
+  return clean;
+}
+
+/**
+ * Get current active image mapping (Merging Defaults with LocalStorage Overrides & Custom Keys)
  */
 function getActiveSiteImages() {
   const customStr = localStorage.getItem('E2_CUSTOM_SITE_IMAGES');
@@ -101,7 +147,9 @@ function getActiveSiteImages() {
   }
 
   const activeMap = {};
-  Object.keys(window.DEFAULT_SITE_IMAGES).forEach(key => {
+
+  // Process defaults
+  Object.keys(window.DEFAULT_SITE_IMAGES || {}).forEach(key => {
     const defaultItem = window.DEFAULT_SITE_IMAGES[key];
     const customVal = customMap[key];
     
@@ -115,19 +163,35 @@ function getActiveSiteImages() {
       if (customVal.label) label = customVal.label;
     }
 
-    if (url && typeof url === 'string') {
-      if (url.startsWith('/assets/')) {
-        url = '.' + url;
-      } else if (url.startsWith('assets/')) {
-        url = './' + url;
-      }
-    }
+    url = sanitizeImageUrl(url);
 
     activeMap[key] = {
       ...defaultItem,
       url: url,
       label: label
     };
+  });
+
+  // Process custom keys added by user
+  Object.keys(customMap).forEach(key => {
+    if (!activeMap[key]) {
+      const customVal = customMap[key];
+      let url = '';
+      let label = key;
+      let category = 'Custom Photos';
+      if (typeof customVal === 'string') {
+        url = customVal;
+      } else if (customVal && typeof customVal === 'object') {
+        url = customVal.url || '';
+        label = customVal.label || key;
+        category = customVal.category || 'Custom Photos';
+      }
+      activeMap[key] = {
+        category,
+        label,
+        url: sanitizeImageUrl(url)
+      };
+    }
   });
 
   return activeMap;
@@ -152,6 +216,12 @@ function applySiteImages() {
       if (item.label) {
         img.alt = item.label;
       }
+
+      // Add fallback error handler if image fails to load
+      img.onerror = function() {
+        this.onerror = null;
+        this.src = './assets/real-red-sofa-living.svg';
+      };
 
       // If wrapped in a gallery lightbox anchor, update lightbox link target as well
       const parentAnchor = img.closest('a');

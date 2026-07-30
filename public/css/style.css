@@ -3402,6 +3402,89 @@ input, select, textarea, button {
 /* --------------------------------------------------------------------------
    20. LOCAL GUIDE & TOP-RATED DINING SECTION STYLES
    -------------------------------------------------------------------------- */
+.guide-concierge-banner {
+  background: linear-gradient(135deg, var(--color-forest) 0%, #1a3c2c 100%);
+  color: #fff;
+  border-radius: 20px;
+  padding: 1.8rem 2.2rem;
+  margin: 1.8rem auto 2.2rem auto;
+  max-width: 920px;
+  box-shadow: 0 10px 30px rgba(13, 40, 24, 0.2);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.guide-concierge-banner::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.guide-concierge-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--color-gold);
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.3rem 0.85rem;
+  border-radius: 30px;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  margin-bottom: 0.8rem;
+}
+
+.guide-concierge-content h3 {
+  font-family: var(--font-heading);
+  font-size: 1.45rem;
+  color: #fff;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.guide-concierge-content p {
+  font-size: 0.92rem;
+  color: rgba(255, 255, 255, 0.88);
+  margin-bottom: 1.2rem;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.guide-concierge-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.g-stat {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  padding: 0.4rem 0.9rem;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.g-stat i {
+  color: var(--color-gold);
+}
+
 .guide-filter-tabs {
   display: flex;
   align-items: center;
@@ -3558,6 +3641,7 @@ input, select, textarea, button {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
+  margin-bottom: 1.2rem;
 }
 
 .guide-tags span {
@@ -3574,9 +3658,101 @@ input, select, textarea, button {
   color: var(--color-gold);
 }
 
+.guide-map-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  width: 100%;
+  padding: 0.55rem 1rem;
+  background: #f8fafc;
+  color: var(--color-forest);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  margin-top: auto;
+}
+
+.guide-map-btn i {
+  color: #2563eb;
+  font-size: 0.9rem;
+}
+
+.guide-map-btn:hover {
+  background: var(--color-forest);
+  color: var(--color-gold);
+  border-color: var(--color-forest);
+  box-shadow: var(--shadow-sm);
+}
+
+.guide-map-btn:hover i {
+  color: var(--color-gold);
+}
+
+/* Concierge Assistance Callout Card */
+.guide-callout-card {
+  margin-top: 2.8rem;
+  background: #fff;
+  border-radius: 16px;
+  border: 1px dashed var(--color-gold);
+  padding: 1.5rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.callout-icon-box {
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
+  border-radius: 50%;
+  background: #25D366;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.25);
+}
+
+.callout-text-box h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-forest);
+  margin: 0 0 0.3rem 0;
+}
+
+.callout-text-box p {
+  font-size: 0.88rem;
+  color: var(--color-charcoal-light);
+  margin: 0;
+  line-height: 1.45;
+}
+
+.callout-btn {
+  white-space: nowrap;
+  padding: 0.75rem 1.4rem;
+  font-size: 0.9rem;
+}
+
 @media (max-width: 768px) {
   .guide-grid {
     grid-template-columns: 1fr;
+  }
+
+  .guide-callout-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.4rem;
+  }
+
+  .callout-btn {
+    width: 100%;
   }
 }
 
